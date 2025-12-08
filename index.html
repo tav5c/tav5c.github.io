@@ -1784,7 +1784,7 @@ function loadMusic() {
     };
 
     miniPlay.addEventListener('click', syncPlay);
-    verticalVol.addEventListener('input', e => globalAudio.volume = e.target.value / 100);
+    verticalVol.addEventListener('input', e => globalAudio.volume = e.target.value / 300);
 
     const mob = document.querySelector('.mobile-audio');
     const mobPlay = document.getElementById('mobilePlay');
@@ -1802,7 +1802,7 @@ function loadMusic() {
         });
         mobVol.addEventListener('input', e => {
             const v = e.target.value;
-            globalAudio.volume = v / 200;
+            globalAudio.volume = v / 300;
             verticalVol.value = v;
         });
     }
@@ -2073,4 +2073,5 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
     </script>
 </body>
+
 </html>
