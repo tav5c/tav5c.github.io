@@ -1267,7 +1267,6 @@ h1:hover {
     right: 38%;
     animation-delay: -8s;
 }
-
 .shape:nth-child(9) {
     width: 85px;
     height: 85px;
@@ -1304,6 +1303,12 @@ h1:hover {
             25% { transform: translate(40px, -40px) rotate(90deg); }
             50% { transform: translate(0, -80px) rotate(180deg); }
             75% { transform: translate(-40px, -40px) rotate(270deg); }
+        }
+        @media (max-width: 768pxpx),(pointer: coarse) {
+             @keyframes float {
+                0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                50% { transform: translate(0, -30px) rotate(180deg); }
+            }
         }
 .project {
     border-radius: 11px 13px 12px 11px;
@@ -1348,15 +1353,20 @@ h1:hover {
         min-width: auto;
     }
 }
-        
-
 @media (max-width: 768px), (pointer: coarse) {
-    .shape:nth-child(n+5) { display: none; }
+    .shape:nth-child(n+3) { display: none; }
     .projects-grid {
         grid-template-columns: 1fr !important;
         gap: 1.5rem;
+    .shape:nth-child(1) { 
+        width: 65px !important; 
+        height: 65px !important; 
     }
-}
+    .shape:nth-child(2) { 
+        width: 75px !important; 
+        height: 75px !important; 
+    }
+}}
 @media (max-width: 768px), (pointer: coarse) {
     .audio-slider-vertical {
         display: none !important;
@@ -1519,7 +1529,7 @@ h1:hover {
 
 
 const canvas = $('#particleCanvas');
-const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true,willReadFrequently: false });
 let particles = [];
 let trails = [];
 let rafId = null;
@@ -1548,15 +1558,15 @@ window.addEventListener('resize', () => {
 
 function initParticles() {
     particles = [];
-    const count = isMobile ? 10 : 80; 
+    const count = isMobile ? 7 : 80; 
     for (let i = 0; i < count; i++) {
         particles.push({
             x: Math.random() * innerWidth,
             y: Math.random() * innerHeight,
-            r: Math.random() * 3 + 1.5,
-            vx: (Math.random() - 0.5) * 0.15,
-            vy: (Math.random() - 0.5) * 0.15,
-            maxSpeed: 0.3,
+            r: isMobile ? Math.random() * 3 + 4 : Math.random() * 3 + 1.5,
+            vx: (Math.random() - 0.5) * (isMobile ? 0.08 : 0.15),
+            vy: (Math.random() - 0.5) * (isMobile ? 0.08 : 0.15),
+            maxSpeed: isMobile ? 0.15 : 0.3,
             a: 0.4 + Math.random() * 0.6,
             hue: Math.random() * 40 + 340,
             pulseSpeed: Math.random() * 0.015 + 0.005,
