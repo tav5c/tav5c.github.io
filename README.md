@@ -19,16 +19,16 @@ Visit: [https://tav5c.github.io](https://tav5c.github.io)
 
 ### Personal Information
 ```javascript
-// Line ~780 - GitHub username
+// Line ~1886 - GitHub username
 const username = 'your-github-username';
 
-// Line ~863 - Discord user ID (for Lanyard API)
+// Line ~1970 - Discord user ID (for Lanyard API)
 const res = await fetch('https://api.lanyard.rest/v1/users/YOUR_DISCORD_ID');
 
-// Line ~871 - Discord avatar ID
+// Line ~1988 - Discord avatar ID
 const avatarUrl = `https://cdn.discordapp.com/avatars/YOUR_DISCORD_ID/${avatarHash}.${extension}`;
 
-// Line ~757 - Contact links
+// Line ~1858 - Contact links
 const contacts = [
     { name: 'DISCORD', icon: '...', url: 'your-discord-link' },
     { name: 'STEAM', icon: '...', url: 'your-steam-link' },
@@ -40,23 +40,23 @@ const contacts = [
 ### Media Files
 Replace these URLs with your own:
 ```html
-<!-- Line ~395 - Background video -->
+<!-- Line ~1470-1471 - Background video -->
 <source src="your-video-url.mp4" type="video/mp4">
 
-<!-- Line ~399 - Fallback background image -->
+<!-- Line ~1473 - Fallback background image -->
 <img class="bg-fallback" id="bgImage" src="your-image-url.png">
 
-<!-- Line ~701 - Background music -->
+<!-- Line ~1772 - Background music -->
 globalAudio = new Audio('your-music-url.mp3');
 
-<!-- Line ~710 - Album cover and song name -->
+<!-- Line ~1782-1783 - Cover and audio name (title) -->
 songNameEl.textContent = 'Your Song Name';
 albumCover.src = 'your-album-cover-url';
 ```
 
 ### Custom Font (Optional)
 ```css
-/* Line ~43 - Font */
+/* Line ~44 - Font */
 @font-face {
     font-family: 'Chomsky';
     src: url('your-font-url.otf') format('opentype');
@@ -68,7 +68,7 @@ albumCover.src = 'your-album-cover-url';
 ## Customization
 
 ### Color Scheme
-Edit CSS variables at the top of the `<style>` section (Line ~18):
+Edit CSS variables at the top of the `<style>` section (Line ~20):
 ```css
 :root {
     --primary-red: #DC143C;
@@ -79,16 +79,9 @@ Edit CSS variables at the top of the `<style>` section (Line ~18):
 ```
 
 ### Particle Count
-Adjust in the `initParticles()` function (Line ~572):
+Adjust in the `initParticles()` function (Line ~1559):
 ```javascript
-const count = isMobile ? 10 : 80; // Mobile : Desktop
-```
-
-### Volume Range
-Change maximum volume (Line ~413):
-```html
-<input type="range" ... max="300" value="100">
-<!-- Max 100 = normal, 200 = 2x, 300 = 3x volume -->
+const count = isMobile ? 7 : 80; // Mobile : Desktop
 ```
 
 ## File Hosting
