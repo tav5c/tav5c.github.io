@@ -14,7 +14,7 @@
     <meta name="twitter:description" content="Jst4fun.">
     <meta name="twitter:image" content="https://files.catbox.moe/w0ri9x.png">
     <meta name="theme-color" content="#DC143C">
-    <title>Black H0le</title>
+    <title>B1ack H0le</title>
     <link rel="shortcut icon" href="https://files.catbox.moe/ci6oa5.jpg">
     <style>
 :root {
@@ -294,11 +294,10 @@ body {
             z-index: 1000;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
-
 .music-player {
     margin: 1.1rem auto 1.5rem auto;
     width: min(980px, 95vw);
-    background: rgba(15, 10, 15, 0);
+    background: rgba(15, 10, 15, 0.05);
     backdrop-filter: blur(12px) saturate(125%) brightness(0.95);
     -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
     border: 1px solid rgba(220, 20, 60, 0.4);
@@ -308,7 +307,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 0.7rem;
-    z-index: 100;
+    z-index: 98;
     box-shadow: 
         0 25px 70px rgba(0, 0, 0, 0.6),
         0 0 40px rgba(220, 20, 60, 0.4),
@@ -342,7 +341,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    z-index: 99;
+z-index: 101;
     box-shadow: 
         0 25px 70px rgba(0, 0, 0, 0.6),
         0 0 40px rgba(220, 20, 60, 0.4),
@@ -419,21 +418,6 @@ body {
     font-size: 0.9rem;
     transition: all 0.3s;
 }
-.album-cover {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border: 2px solid rgba(220, 20, 60, 0.5);
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.music-player:hover .album-cover {
-    transform: scale(1.08);
-    border-color: rgba(255, 23, 68, 0.7);
-    box-shadow: 0 0 30px rgba(220, 20, 60, 0.6);
-}
 
 .song-name {
     color: #FF1744;
@@ -443,6 +427,192 @@ body {
     text-align: center;
     text-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
     transition: transform 0.3s ease, text-shadow 0.3s ease, color 0.3s ease;
+}
+.song-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+.song-separator {
+    color: #ff5671;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+.icon-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.music-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid #DC143C;
+    color: #DC143C;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    font-size: 1.35rem;
+    transition: all 0.3s ease;
+    background: rgba(220, 20, 60, 0.06);
+    box-shadow: 0 0 12px rgba(220, 20, 60, 0.35);
+}
+.music-player.playing .music-icon {
+    box-shadow: 0 0 18px rgba(220, 20, 60, 0.6);
+    transform: scale(1.05);
+}
+.music-player:hover .music-icon {
+    transform: scale(1.08);
+    box-shadow: 0 0 22px rgba(220, 20, 60, 0.55);
+}
+.music-particles {
+    position: absolute;
+    top: -55px;
+    left: 2px;
+    width: 70px;
+    height: 70px;
+    pointer-events: none;
+    overflow: visible;
+}
+.music-particle {
+    position: absolute;
+    color: #ff6b81;
+    font-weight: 700;
+    opacity: 0.9;
+    animation: musicParticle 1.2s ease-out forwards;
+    text-shadow: 0 0 10px rgba(255, 107, 129, 0.4);
+    filter: drop-shadow(0 0 4px rgba(255, 107, 129, 0.6));
+}
+@keyframes musicParticle {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+    100% { transform: translate(var(--dx, -20px), -85px) scale(0.7); opacity: 0; }
+}
+
+.album-cover {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border: 2px solid rgba(220, 20, 60, 0.7);
+    border-radius: 14px;
+    box-shadow: 0 0 22px rgba(220, 20, 60, 0.5);
+    display: block;
+    margin: 0 auto 1.25rem auto;
+}
+.cover-popup {
+    position: absolute;
+    bottom: 60px;
+    left: max(-260px, calc(20px - 50vw));
+    transform: scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(15, 10, 15, 0.92);
+    border-radius: 16px;
+    padding: 1.5rem 1.8rem;
+    border: 1px solid rgba(220, 20, 60, 0.5);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(220, 20, 60, 0.5);
+    z-index: 60;
+    width: 280px;
+    text-align: center;
+    transition: opacity 0.3s ease, transform 0.3s ease, left 0.3s ease;
+    overflow: hidden;
+}
+
+.cover-popup.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.album-cover {
+    width: clamp(170px, 220px, 220px);
+    height: clamp(170px, 220px, 220px);
+}
+
+@media (max-width: 1400px) {
+    .cover-popup {
+        left: calc(-260px + (1400px - 100vw) * 0.15);
+        width: calc(280px - (1400px - 100vw) * 0.08);
+    }
+}
+
+@media (max-width: 1100px) {
+    .cover-popup {
+        left: -200px;
+        width: 240px;
+        padding: 1.2rem 1.5rem;
+    }
+    .album-cover {
+        width: 190px;
+        height: 190px;
+    }
+}
+
+@media (max-width: 900px) {
+    .cover-popup {
+        left: -150px;
+        width: 220px;
+    }
+    .album-cover {
+        width: 170px;
+        height: 170px;
+    }
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+    .cover-popup {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) scale(0.95) !important;
+        width: 260px !important;
+        padding: 1rem 1.2rem !important;
+        background: rgba(10, 5, 10, 0.757) !important;
+    }
+    
+    .cover-popup.visible {
+        transform: translate(-50%, -50%) scale(1) !important;
+    }
+    
+    .album-cover {
+        width: 160px !important;
+        height: 160px !important;
+    }
+}
+.cover-popup-link-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    letter-spacing: 1.4px;
+}
+
+.cover-popup-label {
+    color: #ff667a;
+    font-weight: 700;
+}
+
+.cover-popup a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(220, 20, 60, 0.18);
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.45);
+    font-weight: 700;
+    transition: all 0.25s ease;
+}
+
+.cover-popup a:hover {
+    background: rgba(220, 20, 60, 0.4);
+    box-shadow: 0 0 22px rgba(220, 20, 60, 0.7);
 }
 
 .music-player:hover .song-name {
@@ -1163,7 +1333,19 @@ h1:hover {
     height: 30px;
     object-fit: contain;
     filter: invert(50%) brightness(90%);
-    transition: all 0.3s ease;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    letter-spacing: 4px;
+    color: #666666ce;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .contact-link:hover .contact-icon {
@@ -1176,7 +1358,7 @@ h1:hover {
 
 .contact-link:hover {
     color: #DC143C;
-    text-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    text-shadow: 0 0 20px rgba(220, 20, 60, 0.5), 0 0 30px rgba(220, 20, 60, 0.3);
     transform: scale(1.1);
 }
 
@@ -1304,8 +1486,8 @@ h1:hover {
             50% { transform: translate(0, -80px) rotate(180deg); }
             75% { transform: translate(-40px, -40px) rotate(270deg); }
         }
-        @media (max-width: 768pxpx),(pointer: coarse) {
-             @keyframes float {
+        @media (max-width: 768px), (pointer: coarse) {
+            @keyframes float {
                 0%, 100% { transform: translate(0, 0) rotate(0deg); }
                 50% { transform: translate(0, -30px) rotate(180deg); }
             }
@@ -1358,6 +1540,7 @@ h1:hover {
     .projects-grid {
         grid-template-columns: 1fr !important;
         gap: 1.5rem;
+    }
     .shape:nth-child(1) { 
         width: 65px !important; 
         height: 65px !important; 
@@ -1366,45 +1549,97 @@ h1:hover {
         width: 75px !important; 
         height: 75px !important; 
     }
-}}
+}
 @media (max-width: 768px), (pointer: coarse) {
     .audio-slider-vertical {
         display: none !important;
     }
-    .mobile-audio {
-        position: fixed;
-        bottom: 0.8rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 85vw;
-        max-width: 400px;
-        background: rgba(15, 10, 15, 0.85);
-        border: 1px solid rgba(220,20,60,0.4);
-        border-radius: 20px;
-        padding: .6rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        backdrop-filter: blur(20px);
-        z-index: 120;
-    }
-    #mobileVolume {
-        flex: 1;
-        -webkit-appearance: none;
-        appearance: none;
-        height: 8px;
-        border-radius: 10px;
-        background: linear-gradient(90deg, rgba(139,0,0,.3), rgba(220,20,60,.8));
-    }
-    #mobileVolume::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: #DC143C;
-        border: 2px solid rgba(255,255,255,0.2);
-        box-shadow: 0 0 20px rgba(220,20,60,.8);
-    }
+.mobile-audio {
+    position: fixed;
+    bottom: 0.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85vw;
+    max-width: 400px;
+    background: rgba(15, 10, 15, 0.85);
+    border: 1px solid rgba(220,20,60,0.4);
+    border-radius: 20px;
+    padding: .8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    backdrop-filter: blur(20px);
+    z-index: 120;
+}
+
+.mobile-audio button:hover,
+.mobile-audio button:active {
+    background: #8B0000;
+    box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    transform: scale(1.1);
+}
+.mobile-audio button {
+    background: none;
+    border: 1px solid #8B0000;
+    color: #DC143C;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+#mobileVolume {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 12px;
+    background: transparent;
+    outline: none;
+    border-radius: 12px;
+}
+
+#mobileVolume::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(90deg, rgba(139, 0, 0, 0.3) 0%, var(--primary-red) 100%);
+    border-radius: 12px;
+    box-shadow: 0 0 20px var(--shadow-red), inset 0 0 10px var(--shadow-red);
+    border: 1px solid var(--border-red);
+}
+
+#mobileVolume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-red), var(--dark-red));
+    cursor: pointer;
+    box-shadow: 0 0 25px var(--shadow-red), 0 0 40px var(--shadow-red);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin-top: -6px;
+}
+
+#mobileVolume::-moz-range-track {
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(90deg, rgba(139, 0, 0, 0.3) 0%, var(--primary-red) 100%);
+    border-radius: 12px;
+    box-shadow: 0 0 20px var(--shadow-red), inset 0 0 10px var(--shadow-red);
+    border: 1px solid var(--border-red);
+}
+
+#mobileVolume::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-red), var(--dark-red));
+    cursor: pointer;
+    box-shadow: 0 0 25px var(--shadow-red), 0 0 40px var(--shadow-red);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
+}
     .shape:nth-child(n+5) { display: none; } 
     h1 { 
         letter-spacing: 10px;
@@ -1422,18 +1657,6 @@ h1:hover {
     .time-value {
         font-size: clamp(1.8rem, 9vw, 3.5rem);
     }
-@media (max-width: 768px) {
-    .music-player {
-        width: 92vw !important;
-        max-width: 400px !important;
-        margin: 0.8rem auto 1rem !important;
-        transform: translateX(-5vw) !important;
-    }
-}
-    .album-cover {
-        width: 100px;
-        height: 100px;
-    }
 
     .song-name {
         font-size: 1.1rem;
@@ -1450,6 +1673,36 @@ h1:hover {
     }
     .contact-section {
         padding: 3rem 1rem;
+    }
+}
+@media (max-width: 768px) {
+    .music-player {
+        width: 92vw !important;
+        max-width: 400px !important;
+        margin: 0.8rem auto 1rem !important;
+        transform: translateX(-5vw) !important;
+    }
+}
+@media (max-width: 768px), (pointer: coarse) {
+    #particleCanvas,
+    .grain,
+    .floating-shapes {
+        display: none !important;
+    }
+    
+    .content-section,
+    .section-title,
+    .project {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    .content-section.visible,
+    .section-title.visible,
+    .project.visible {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
     </style>
@@ -1498,14 +1751,27 @@ h1:hover {
 </div>
     <section class="hero">
         <div class="bg-grid"></div>
-<div class="music-player" id="musicPlayer" style="display:none;">
-    <img class="album-cover" id="albumCover" alt="Album Cover">
-    <div class="song-name" id="songName"></div>
-</div>
         <div class="time-display">
             <div class="time-label">Time (UTC+1)</div>
             <div class="time-value" id="currentTime">00:00:00</div>
         </div>
+<div class="music-player" id="musicPlayer" style="display:none;">
+    <div class="song-row">
+<div class="icon-wrap">
+    <span class="music-icon" id="musicIcon">♫</span>
+    <div class="music-particles" id="musicParticles"></div>
+    <div class="cover-popup" id="coverPopup">
+        <img class="album-cover" id="albumCover" alt="Album Cover">
+        <div class="cover-popup-link-row">
+            <span class="cover-popup-label" id="songLinkLabel"></span>
+            <a id="songLink" href="#" target="_blank" rel="noopener noreferrer">OPEN</a>
+        </div>
+    </div>
+</div>
+<span class="song-separator">|</span>
+<div class="song-name" id="songName"></div>
+    </div>
+</div>
         <div id="discordActivity"></div>
         <h1>Tav</h1>
         <p class="subtitle">Lost ?</p>
@@ -1529,14 +1795,27 @@ h1:hover {
 
 
 const canvas = $('#particleCanvas');
-const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true,willReadFrequently: false });
+const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false });
 let particles = [];
 let trails = [];
 let rafId = null;
 let mx = window.innerWidth / 2, my = window.innerHeight / 2;
 const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+if (!isMobile) {
+    const projectsObserver = new IntersectionObserver(entries => {
+        entries.forEach(ent => {
+            if (ent.isIntersecting) ent.target.classList.add('visible');
+        });
+    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
 
+    const projectsSection = $('#projectsSection');
+    if (projectsSection) {
+        projectsObserver.observe(projectsSection);
+        projectsObserver.observe($('#projectsSection .section-title'));
+    }
+}
 function resizeCanvas() {
+    if (!canvas) return;
     const dpr = isMobile ? 1 : (window.devicePixelRatio || 1); 
     canvas.width = Math.max(300, window.innerWidth * dpr);
     canvas.height = Math.max(300, window.innerHeight * dpr);
@@ -1552,11 +1831,14 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
         resizeCanvas();
-        initParticles();
+        if (!isMobile) {
+            initParticles();
+        }
     }, 150);
 }, { passive: true });
 
 function initParticles() {
+    if (!canvas || isMobile) return;
     particles = [];
     const count = isMobile ? 7 : 80; 
     for (let i = 0; i < count; i++) {
@@ -1575,10 +1857,8 @@ function initParticles() {
     }
 }
 
-initParticles();
-
 function drawTrails() {
-    if (isMobile) return; 
+    if (isMobile || !canvas) return; 
     ctx.save();
     trails.forEach(t => {
         t.life -= 0.05;
@@ -1593,6 +1873,7 @@ function drawTrails() {
 }
 
 function animateParticles() {
+    if (!canvas) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach((p, idx) => {
@@ -1655,13 +1936,18 @@ function animateParticles() {
     rafId = requestAnimationFrame(animateParticles);
 }
 
-animateParticles();
+if (!isMobile) {
+    initParticles();
+    animateParticles();
+} else if (canvas) {
+    canvas.style.display = 'none';
+}
 
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         if (rafId) cancelAnimationFrame(rafId);
         rafId = null;
-    } else {
+    } else if (!isMobile) {
         if (!rafId) animateParticles();
     }
 });
@@ -1766,6 +2052,7 @@ window.addEventListener('load', () => {
     });
 })();
 let globalAudio = null;
+let audioFromVideo = false;
 let userInteracted = false;
 
 function loadMusic() {
@@ -1776,25 +2063,139 @@ function loadMusic() {
     const verticalVol = $('#verticalVolume');
     const miniPlay = $('#miniPlay');
     const songNameEl = $('#songName');
-    const albumCover = $('#albumCover');
     const musicPlayer = $('#musicPlayer');
+    const bgVideoEl = $('#bgVideo');
+    const musicIcon = $('#musicIcon');
+    const musicParticles = $('#musicParticles');
+    const coverPopup = $('#coverPopup');
+    const albumCover = $('#albumCover');
+    const songLink = $('#songLink');
+    const songLinkLabel = $('#songLinkLabel');
+    const particleSymbols = ['♪', '♫', '♩', '♬', '♭'];
+    let particleTimer = null;
+    let hoverTimer = null;
+    let coverOpen = false;
+
+    const songCoverUrl = 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F67276ca946b258b36a3d0ef8f6c60a20.1000x1000x1.png';
+    const songPageUrl = 'https://youtu.be/5gn-Nor78VU';
+    const songPageLabel = 'YOUTUBE';
 
     songNameEl.textContent = 'Eazy e - Unreleased - Black N*gga Killa (1994-inst)';
-    albumCover.src = 'https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F67276ca946b258b36a3d0ef8f6c60a20.1000x1000x1.png';
-    albumCover.onerror = () => albumCover.style.display = 'none';
     musicPlayer.style.display = 'flex';
+
+    if (albumCover) {
+        albumCover.src = songCoverUrl;
+        albumCover.onload = () => { albumCover.style.display = 'block'; };
+        albumCover.onerror = () => {
+            albumCover.style.display = 'none';
+            coverPopup?.classList.remove('visible');
+            coverOpen = false;
+        };
+    }
+
+    if (songLink && songLinkLabel) {
+        songLink.href = songPageUrl;
+        songLinkLabel.textContent = songPageLabel;
+    }
+
+    function openCover() {
+        if (!coverPopup || coverOpen) return;
+        coverOpen = true;
+        coverPopup.classList.add('visible');
+    }
+
+    function closeCover() {
+        if (!coverPopup || !coverOpen) return;
+        coverOpen = false;
+        coverPopup.classList.remove('visible');
+    }
+
+    function spawnParticle() {
+        if (!musicParticles) return;
+        const p = document.createElement('span');
+        p.className = 'music-particle';
+        p.textContent = particleSymbols[Math.floor(Math.random() * particleSymbols.length)];
+        p.style.fontSize = `${11 + Math.random() * 9}px`;
+        p.style.left = `${20 + Math.random() * 24}px`;
+        p.style.bottom = '0px';
+        const dx = (Math.random() * -45 - 10).toFixed(1); // negative for left drift
+        p.style.setProperty('--dx', `${dx}px`);
+        musicParticles.appendChild(p);
+        setTimeout(() => p.remove(), 1200);
+    }
+
+    function startParticles() {
+        if (!musicParticles || particleTimer) return;
+        musicPlayer?.classList.add('playing');
+        particleTimer = setInterval(spawnParticle, 120);
+        spawnParticle();
+    }
+
+    function stopParticles() {
+        if (particleTimer) {
+            clearInterval(particleTimer);
+            particleTimer = null;
+        }
+        musicPlayer?.classList.remove('playing');
+    }
 
     const syncPlay = () => {
         if (globalAudio.paused) {
-            globalAudio.play().then(() => miniPlay.textContent = '❚❚').catch(() => {});
+            globalAudio.play()
+                .then(() => {
+                    miniPlay.textContent = '❚❚';
+                    startParticles();
+                    if (bgVideoEl) {
+                        bgVideoEl.play().catch(() => {});
+                    }
+                })
+                .catch(() => {});
         } else {
             globalAudio.pause();
             miniPlay.textContent = '▶';
+            stopParticles();
+            if (bgVideoEl) {
+                bgVideoEl.pause();
+            }
         }
     };
 
     miniPlay.addEventListener('click', syncPlay);
     verticalVol.addEventListener('input', e => globalAudio.volume = e.target.value / 300);
+
+    if (musicPlayer) {
+        musicPlayer.style.position = 'relative';
+    }
+
+    if (musicIcon) {
+        musicIcon.addEventListener('click', () => {
+            if (coverOpen) {
+                closeCover();
+            } else {
+                openCover();
+            }
+        });
+
+        musicIcon.addEventListener('mouseenter', () => {
+            if (hoverTimer) clearTimeout(hoverTimer);
+            hoverTimer = setTimeout(() => {
+                openCover();
+            }, 3000);
+        });
+
+        musicIcon.addEventListener('mouseleave', () => {
+            if (hoverTimer) {
+                clearTimeout(hoverTimer);
+                hoverTimer = null;
+            }
+        });
+    }
+
+    if (coverPopup) {
+        coverPopup.addEventListener('mouseleave', () => {
+            closeCover();
+        });
+    }
 
     const mob = document.querySelector('.mobile-audio');
     const mobPlay = document.getElementById('mobilePlay');
@@ -1805,9 +2206,15 @@ function loadMusic() {
         mob.style.display = 'flex';
         mobPlay.addEventListener('click', () => {
             if (globalAudio.paused) {
-                globalAudio.play();
+                globalAudio.play().catch(() => {});
+                if (bgVideoEl) {
+                    bgVideoEl.play().catch(() => {});
+                }
             } else {
                 globalAudio.pause();
+                if (bgVideoEl) {
+                    bgVideoEl.pause();
+                }
             }
         });
         mobVol.addEventListener('input', e => {
@@ -1820,14 +2227,24 @@ function loadMusic() {
     globalAudio.addEventListener('play', () => {
         if (mobPlay) mobPlay.textContent = '❚❚';
         miniPlay.textContent = '❚❚';
+        startParticles();
     });
     globalAudio.addEventListener('pause', () => {
         if (mobPlay) mobPlay.textContent = '▶';
         miniPlay.textContent = '▶';
+        stopParticles();
     });
 
     globalAudio.addEventListener('canplaythrough', markAssetLoaded, { once: true });
-    globalAudio.addEventListener('error', markAssetLoaded);
+    globalAudio.addEventListener('error', () => {
+        if (bgVideoEl) {
+            audioFromVideo = true;
+            globalAudio = bgVideoEl;
+            bgVideoEl.muted = false;
+            bgVideoEl.loop = true;
+        }
+        markAssetLoaded();
+    });
     globalAudio.load();
 }
 function initEnterOverlay() {
@@ -1840,10 +2257,20 @@ function initEnterOverlay() {
         userInteracted = true;
         enterOverlay.classList.add('hidden');
         setTimeout(() => enterOverlay.style.display = 'none', 1500);
-        if (globalAudio && globalAudio.paused) {
+        if (globalAudio) {
+            try {
+                globalAudio.currentTime = 0;
+            } catch (e) {
+                // ignore if seeking fails
+            }
             globalAudio.play().catch(() => {});
         }
-        if (bgVideo && bgVideo.paused) {
+        if (bgVideo) {
+            try {
+                bgVideo.currentTime = 0;
+            } catch (e) {
+                // seeking might fail on some browsers; ignore
+            }
             bgVideo.play().catch(() => {});
         }
     });
@@ -2083,5 +2510,4 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
     </script>
 </body>
-
 </html>
