@@ -93,7 +93,7 @@ body {
 
         @media (pointer: coarse) {
             body { cursor: auto; }
-            .cursor, .cursor-follower { display: none; }
+            .cursor, .cursor-follower { display: none;will-change: transform;}
         }
 
         
@@ -212,6 +212,7 @@ body {
 }
 
 .bg-video {
+    will-change: opacity;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -294,6 +295,37 @@ body {
             z-index: 1000;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
+    .dynamic-hover {
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dynamic-hover::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        background: radial-gradient(
+            circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+            rgba(220, 20, 60, 0.15) 0%, 
+            transparent 70%
+        );
+        z-index: -1;
+    }
+
+    .dynamic-hover:hover::before {
+        opacity: 1;
+    }
+
+    .dynamic-hover:hover {
+        transform: scale(1.02);
+    }
 .music-player {
     margin: 1.1rem auto 1.5rem auto;
     width: min(980px, 95vw);
@@ -308,7 +340,7 @@ body {
     align-items: center;
     gap: 0.7rem;
     z-index: 98;
-    box-shadow: 
+        box-shadow: 
         0 25px 70px rgba(0, 0, 0, 0.6),
         0 0 40px rgba(220, 20, 60, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -317,12 +349,10 @@ body {
 
 .music-player:hover {
     transform: scale(1.01);
-    box-shadow: 
-        0 28px 80px rgba(220, 20, 60, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     border-color: rgba(220, 20, 60, 0.6);
-    backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
+    backdrop-filter: blur(10px) ;
+    -webkit-backdrop-filter: blur(10px) ;
 }
 .audio-slider-vertical {
     position: fixed;
@@ -342,21 +372,16 @@ body {
     align-items: center;
     gap: 1.5rem;
 z-index: 101;
-    box-shadow: 
-        0 25px 70px rgba(0, 0, 0, 0.6),
-        0 0 40px rgba(220, 20, 60, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .audio-slider-vertical:hover {
     transform: translateY(-50%) scale(1.02);
-    box-shadow: 
-        0 28px 80px rgba(220, 20, 60, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     border-color: rgba(220, 20, 60, 0.6);
     backdrop-filter: blur(16px) saturate(150%) brightness(1.0);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
+    -webkit-backdrop-filter: blur(10px) ;
 }
 
 .vertical-volume {
@@ -684,14 +709,8 @@ z-index: 101;
 }
 .discord-activity:hover {
     transform: scale(1.01);
-    box-shadow: 
-        0 28px 80px rgba(220, 20, 60, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     border-color: rgba(220, 20, 60, 0.28);
-    
-    
-    backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
 }
         .discord-activity::before {
             content: '';
@@ -936,14 +955,12 @@ z-index: 101;
 
 .time-display:hover {
     transform: scale(1.01);
-    box-shadow: 
-        0 28px 80px rgba(220, 20, 60, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     border-color: rgba(220, 20, 60, 0.28);
     
     
-    backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
+    backdrop-filter: blur(10px) ;
+    -webkit-backdrop-filter: blur(10px) ;
 }
 
         .time-label {
@@ -1146,12 +1163,10 @@ h1:hover {
 
 .project:hover {
     border-color: rgba(220, 20, 60, 0.5);
-    box-shadow: 
-        0 28px 80px rgba(220, 20, 60, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     transform: scale(1.02);
     backdrop-filter: blur(16px) saturate(150%) brightness(1.0);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
+    -webkit-backdrop-filter: blur(10px) ;
 }
 
 .project-content {
@@ -1375,6 +1390,7 @@ h1:hover {
         }
 
 .shape {
+    will-change: transform;
     position: absolute;
     border: 2px solid var(--border-red);
     animation: float 20s infinite ease-in-out;
@@ -1729,9 +1745,8 @@ h1:hover {
     <canvas id="particleCanvas"></canvas>
 <div class="video-background">
     <div class="video-overlay"></div>
-    <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto">
+    <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto" poster="assets/poster.jpg">
         <source src="assets/bg.mp4" type="video/mp4">
-        <source src="assets/bg.webm" type="video/webm">
     </video>
     <!-- <img class="bg-fallback" id="bgImage" src="assets/bg.jpg" > -->
 </div>
@@ -1751,7 +1766,7 @@ h1:hover {
         <div class="shape"></div>
     </div>
 
-<div class="audio-slider-vertical">
+<div class="audio-slider-vertical dynamic-hover">
     <button class="mini-btn" id="miniPlay" aria-label="Play">▶</button>
     <input type="range" class="vertical-volume" id="verticalVolume" min="0" max="300" value="100" orient="vertical">
 </div>
@@ -1761,12 +1776,11 @@ h1:hover {
 </div>
     <section class="hero">
         <div class="bg-grid"></div>
-        <div class="time-display">
+        <div class="time-display dynamic-hover">
             <div class="time-label">Time (UTC+1)</div>
             <div class="time-value" id="currentTime">00:00:00</div>
         </div>
-<div class="music-player" id="musicPlayer" style="display:none;">
-    <div class="song-row">
+<div class="music-player dynamic-hover" id="musicPlayer" style="display:none;">    <div class="song-row">
 <div class="icon-wrap">
     <span class="music-icon" id="musicIcon">♫</span>
     <div class="music-particles" id="musicParticles"></div>
@@ -1795,7 +1809,7 @@ h1:hover {
 </section>
     <section class="contact-section">
         <h2 class="contact-title">CONTACT</h2>
-        <div class="contact-links" id="contactLinks"></div>
+        <div class="contact-links dynamic-hover" id="contactLinks"></div>
     </section>
 
     <script>
@@ -1803,7 +1817,39 @@ h1:hover {
         const $$ = sel => Array.from(document.querySelectorAll(sel));
 
 
-
+const DOM_CACHE = {
+    cursor: $('.cursor'),
+    follower: $('.cursor-follower'),
+    bgGrid: $('.bg-grid'),
+    shapes: $$('.shape'),
+    canvas: $('#particleCanvas'),
+    bgVideo: $('#bgVideo'),
+    projectsGrid: $('#projectsGrid'),
+    musicPlayer: $('#musicPlayer')
+};
+function updateCursor(x, y) {
+    if (DOM_CACHE.cursor) {
+        DOM_CACHE.cursor.style.transform = `translate(${x - 10}px, ${y - 10}px)`;
+    }
+}
+(function initMouseTracking() {
+    const dynamicElements = $$('.dynamic-hover');
+    
+    dynamicElements.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            el.style.setProperty('--mouse-x', `${x}%`);
+            el.style.setProperty('--mouse-y', `${y}%`);
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            el.style.setProperty('--mouse-x', '50%');
+            el.style.setProperty('--mouse-y', '50%');
+        });
+    });
+})();
 const canvas = $('#particleCanvas');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false });
 let particles = [];
@@ -1836,21 +1882,48 @@ function resizeCanvas() {
 
 resizeCanvas();
 
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
+let resizeTimeout;
+const debouncedResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
         resizeCanvas();
         if (!isMobile) {
             initParticles();
         }
-    }, 150);
-}, { passive: true });
+    }, 250);
+};
 
+window.addEventListener('resize', debouncedResize, { passive: true });
+window.addEventListener('orientationchange', () => {
+    setTimeout(debouncedResize, 100);
+}, { passive: true });
+function initMagneticElements() {
+    const magnets = $$('.contact-link, .project, .mini-btn');
+    
+    magnets.forEach(magnet => {
+        magnet.addEventListener('mousemove', (e) => {
+            const rect = magnet.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const moveX = x * 0.15;
+            const moveY = y * 0.15;
+            
+            magnet.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            magnet.style.transition = 'transform 0.2s ease-out';
+        });
+        
+        magnet.addEventListener('mouseleave', () => {
+            magnet.style.transform = 'translate(0, 0)';
+            magnet.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+    });
+}
+initMagneticElements();
 function initParticles() {
     if (!canvas || isMobile) return;
     particles = [];
-    const count = isMobile ? 7 : 80; 
+    const count = isMobile ? 5 : 60
     for (let i = 0; i < count; i++) {
         particles.push({
             x: Math.random() * innerWidth,
@@ -1970,7 +2043,39 @@ if (!isMobile) {
     }, 50);
 }
 
-
+if (isMobile) {
+    let touchStartTime;
+    let touchStartPos;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartTime = Date.now();
+        touchStartPos = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+    }, { passive: true });
+    
+    document.addEventListener('touchend', (e) => {
+        const touchEndTime = Date.now();
+        const touchDuration = touchEndTime - touchStartTime;
+        
+        const touchEndPos = {
+            x: e.changedTouches[0].clientX,
+            y: e.changedTouches[0].clientY
+        };
+        
+        const distance = Math.sqrt(
+            Math.pow(touchEndPos.x - touchStartPos.x, 2) +
+            Math.pow(touchEndPos.y - touchStartPos.y, 2)
+        );
+        if (touchDuration < 200 && distance < 10) {
+            const target = document.elementFromPoint(touchEndPos.x, touchEndPos.y);
+            if (target?.classList.contains('project')) {
+                target.click();
+            }
+        }
+    }, { passive: true });
+}
 (function startClock() {
     const el = document.querySelector('#currentTime');
     if (!el) return;
@@ -2210,8 +2315,14 @@ function loadMusic() {
     const mob = document.querySelector('.mobile-audio');
     const mobPlay = document.getElementById('mobilePlay');
     const mobVol = document.getElementById('mobileVolume');
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
+    const isMobile = (() => {
+        if (window.innerWidth < 768) return true;
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            return window.innerWidth < 1024;
+        }
+        return false;
+    })();
     if (isMobile && mob) {
         mob.style.display = 'flex';
         mobPlay.addEventListener('click', () => {
@@ -2343,7 +2454,7 @@ async function loadGitHubRepos() {
         
         publicRepos.slice(0, 8).forEach((repo, index) => {
             const project = document.createElement('div');
-            project.className = 'project';
+            project.className = 'project dynamic-hover';
             const language = repo.language || 'Code';
             const description = repo.description || 'No description available';
             const truncatedDesc = description.length > 120 ? description.slice(0, 117) + '...' : description;
@@ -2439,7 +2550,7 @@ if (projectsSection) {
                 timeString = h > 0 ? `${h}h ${m}m` : `${m}m`;
             }
 
-            container.className = 'discord-activity';
+            container.className = 'discord-activity dynamic-hover';
             container.innerHTML = `
                 <div class="left-badge">
                     <img class="activity-pfp" src="${avatarUrl}" alt="User avatar" loading="lazy">
@@ -2480,7 +2591,7 @@ if (projectsSection) {
         }
 
         fetchDiscordActivity();
-        setInterval(fetchDiscordActivity, 35000);
+        setInterval(fetchDiscordActivity, 60000);
 
 
         const cursor = $('.cursor');
@@ -2507,18 +2618,23 @@ if (projectsSection) {
             el.addEventListener('mouseleave', () => { if (cursor) cursor.style.transform = cursor.style.transform.replace(' scale(1.45)', ''); });
         });
 
+let scrollTicking = false;
 window.addEventListener('scroll', () => {
-    if (isMobile) return; 
-    
-    const scrollPos = window.scrollY;
-    $$('.bg-grid').forEach(grid => {
-        grid.style.transform = `translateY(${scrollPos * 0.05}px)`;
-    });
-    $$('.shape').forEach(shape => {
-        shape.style.transform = `translateY(${scrollPos * 0.1}px)`;
-    });
+    if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+            if (isMobile) return;
+            const scrollPos = window.scrollY;
+            $$('.bg-grid').forEach(grid => {
+                grid.style.transform = `translateY(${scrollPos * 0.05}px)`;
+            });
+            $$('.shape').forEach(shape => {
+                shape.style.transform = `translateY(${scrollPos * 0.1}px)`;
+            });
+            scrollTicking = false;
+        });
+        scrollTicking = true;
+    }
 }, { passive: true });
     </script>
 </body>
 </html>
-
