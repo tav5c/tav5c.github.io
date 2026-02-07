@@ -1733,7 +1733,7 @@ h1:hover {
         <source src="assets/bg.mp4" type="video/mp4">
         <source src="assets/bg.webm" type="video/webm">
     </video>
-    <img class="bg-fallback" id="bgImage" src="assets/bg.jpg" >
+    <!-- <img class="bg-fallback" id="bgImage" src="assets/bg.jpg" > -->
 </div>
 
     <div class="cursor" aria-hidden="true"></div>
@@ -2335,4 +2335,190 @@ async function loadGitHubRepos() {
         const publicRepos = repos.filter(repo => !repo.fork && !repo.private);
         
         if (publicRepos.length === 0) {
-            projectsGr
+            projectsGrid.innerHTML = '<div class="loading-repos">No public repositories found</div>';
+            return;
+        }
+        
+        projectsGrid.innerHTML = '';
+        
+        publicRepos.slice(0, 8).forEach((repo, index) => {
+            const project = document.createElement('div');
+            project.className = 'project';
+            const language = repo.language || 'Code';
+            const description = repo.description || 'No description available';
+            const truncatedDesc = description.length > 120 ? description.slice(0, 117) + '...' : description;
+            const updatedDate = new Date(repo.updated_at).toLocaleDateString('en-US', { 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            
+            project.innerHTML = `
+                <div class="project-content">
+                    <div>
+                        <h3>${repo.name.toUpperCase().replace(/-/g, ' ')}</h3>
+                        <p>${truncatedDesc}</p>
+                        <div class="project-tags">
+                            <span class="tag">${language.toUpperCase()}</span>
+                            ${repo.topics && repo.topics.length > 0 
+                                ? repo.topics.slice(0, 3).map(topic => `<span class="tag">${topic.toUpperCase()}</span>`).join('') 
+                                : ''}
+                        </div>
+                        <div class="project-meta">
+                            <span>★ ${repo.stargazers_count}</span>
+                            <span>⑂ ${repo.forks_count}</span>
+                            <span>◷ ${updatedDate}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            project.addEventListener('click', () => {
+                window.open(repo.html_url, '_blank', 'noopener,noreferrer');
+            });
+            
+            projectsGrid.appendChild(project);
+            setTimeout(() => {
+                project.classList.add('visible');
+            }, index * 100);
+        });
+        
+    } catch (error) {
+        console.error('GitHub API error:', error);
+        projectsGrid.innerHTML = '<div class="loading-repos">Failed to load repositories. Please check console.</div>';
+    }
+}
+
+if ($('#projectsGrid')) {
+    loadGitHubRepos();
+}
+const projectsObserver = new IntersectionObserver(entries => {
+    entries.forEach(ent => {
+        if (ent.isIntersecting) ent.target.classList.add('visible');
+    });
+}, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
+
+const projectsSection = $('#projectsSection');
+if (projectsSection) {
+    projectsObserver.observe(projectsSection);
+    projectsObserver.observe($('#projectsSection .section-title'));
+}
+
+        async function fetchDiscordActivity() {
+            try {
+                const res = await fetch('https://api.lanyard.rest/v1/users/772499734207660042');
+                const data = await res.json();
+                if (data.success) updateActivityDisplay(data.data);
+            } catch (e) { console.warn('Activity fetch failed', e); }
+        }
+
+        function updateActivityDisplay(userData) {
+            const container = $('#discordActivity') || (() => {
+                const d = document.createElement('div');
+                d.id = 'discordActivity';
+                $('.hero').insertBefore(d, $('.hero').children[2] || null);
+                return d;
+            })();
+
+            const activity = userData.activities?.find(a => a.type !== 4 && a.type !== 1);
+            const avatarHash = userData.discord_user?.avatar || '';
+            const isAnimated = avatarHash.startsWith('a_');
+            const extension = isAnimated ? 'gif' : 'png';
+            const avatarUrl = avatarHash ? `https://cdn.discordapp.com/avatars/772499734207660042/${avatarHash}.${extension}` : '';
+
+            let activityImgHtml = '';
+            if (activity && activity.application_id && activity.assets?.large_image) {
+                const large = activity.assets.large_image;
+                const url = large.startsWith('mp:') ? `https://media.discordapp.net/${large.replace('mp:', '')}` : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${large}.png`;
+                activityImgHtml = `<img class="activity-app-icon" src="${url}" alt="Activity app icon" loading="lazy">`;
+            }
+
+            const startTime = activity?.timestamps?.start;
+            let timeString = '';
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const h = Math.floor(elapsed / 3600), m = Math.floor((elapsed % 3600) / 60);
+                timeString = h > 0 ? `${h}h ${m}m` : `${m}m`;
+            }
+
+            container.className = 'discord-activity';
+            container.innerHTML = `
+                <div class="left-badge">
+                    <img class="activity-pfp" src="${avatarUrl}" alt="User avatar" loading="lazy">
+                    <div style="display:flex;flex-direction:column;">
+                        <div class="activity-status">Status: ${getStatusText(userData.discord_status)}</div>
+                        <div style="font-size:0.85rem;color:#aaa;margin-top:6px;">User Name: n.snake</div>
+                    </div>
+                </div>
+                <div class="center">
+                    ${activityImgHtml}
+                    <div class="text-block">
+                        ${activity ? `<div class="activity-name">${activity.name ? (activity.name.length > 36 ? activity.name.slice(0, 34) + '…' : activity.name) : 'Activity'}</div>` : `<div class="activity-name">No active activity</div>`}
+                        ${activity?.details ? `<div class="activity-details">${activity.details}</div>` : ''}
+                        ${activity?.state ? `<div class="activity-state">${activity.state}</div>` : ''}
+                        ${timeString ? `<div class="activity-timestamp">For ${timeString}</div>` : ''}
+                    </div>
+                </div>
+                <div class="right">
+                    <span class="status-indicator"></span>
+                    <div class="status-text"></div>
+                </div>
+            `;
+
+            const indicator = container.querySelector('.status-indicator');
+            const statusText = container.querySelector('.status-text');
+            const presence = userData.discord_status || 'offline';
+            indicator.classList.add(presence);
+            statusText.textContent = presence === 'offline' ? 'Offline' : '';
+        }
+
+        function getStatusText(s) {
+            switch (s) {
+                case 'online': return 'Online';
+                case 'idle': return 'Idle';
+                case 'dnd': return 'Do Not Disturb';
+                default: return 'Offline';
+            }
+        }
+
+        fetchDiscordActivity();
+        setInterval(fetchDiscordActivity, 35000);
+
+
+        const cursor = $('.cursor');
+        const follower = $('.cursor-follower');
+        let fx = mx, fy = my;
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX;
+            my = e.clientY;
+            if (cursor) cursor.style.transform = `translate(${mx - 10}px, ${my - 10}px)`;
+        });
+
+        function followerLoop() {
+            fx += (mx - fx) * 0.12;
+            fy += (my - fy) * 0.12;
+            if (follower) follower.style.transform = `translate(${fx - 20}px, ${fy - 20}px)`;
+            requestAnimationFrame(followerLoop);
+        }
+
+        followerLoop();
+
+        $$('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => { if (cursor) cursor.style.transform += ' scale(1.45)'; });
+            el.addEventListener('mouseleave', () => { if (cursor) cursor.style.transform = cursor.style.transform.replace(' scale(1.45)', ''); });
+        });
+
+window.addEventListener('scroll', () => {
+    if (isMobile) return; 
+    
+    const scrollPos = window.scrollY;
+    $$('.bg-grid').forEach(grid => {
+        grid.style.transform = `translateY(${scrollPos * 0.05}px)`;
+    });
+    $$('.shape').forEach(shape => {
+        shape.style.transform = `translateY(${scrollPos * 0.1}px)`;
+    });
+}, { passive: true });
+    </script>
+</body>
+</html>
+
