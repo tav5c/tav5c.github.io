@@ -1851,7 +1851,7 @@ function updateCursor(x, y) {
     });
 })();
 const canvas = $('#particleCanvas');
-const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false });
+const ctx = canvas ? canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false }) : null;
 let particles = [];
 let trails = [];
 let rafId = null;
