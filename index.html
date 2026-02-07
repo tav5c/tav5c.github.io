@@ -1518,7 +1518,45 @@ h1:hover {
 .time-display {
     border-radius: 17px 19px 18px 17px;
 }
+@media (hover: none) and (pointer: coarse) {
+    .dynamic-hover:hover::before,
+    .project:hover,
+    .discord-activity:hover,
+    .time-display:hover,
+    .music-player:hover,
+    .contact-link:hover {
+        opacity: 1 !important;
+        transform: none !important;
+        border-color: inherit !important;
+        box-shadow: inherit !important;
+    }
+}
 
+.touch-active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
+.touched {
+    background: rgba(220, 20, 60, 0.15) !important;
+    border-color: rgba(220, 20, 60, 0.6) !important;
+    animation: touchPulse 0.4s ease-out forwards !important;
+}
+
+@keyframes touchPulse {
+    0% {
+        transform: scale(0.98);
+        box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.7);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 10px rgba(220, 20, 60, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 20, 60, 0);
+    }
+}
 @media (max-width: 1024px) {
     .content-section { padding: 4rem 2rem; }
     .projects-grid { 
@@ -1850,6 +1888,38 @@ function updateCursor(x, y) {
         });
     });
 })();
+(function initTouchFeedback() {
+    if (!('ontouchstart' in window)) return;
+
+    const touchableSelectors = [
+        '.dynamic-hover',
+        '.project',
+        '.contact-link',
+        '.mini-btn',
+        '.music-player',
+        '.discord-activity'
+    ];
+
+    const touchableElements = $$(touchableSelectors.join(', '));
+
+    touchableElements.forEach(el => {
+        el.addEventListener('touchstart', (e) => {
+            el.classList.add('touch-active');
+        }, { passive: true });
+        el.addEventListener('touchend', (e) => {
+             if (navigator.vibrate) {
+        navigator.vibrate(20);}
+            el.classList.remove('touch-active');
+            el.classList.add('touched');
+            setTimeout(() => {
+                el.classList.remove('touched');
+            }, 400);
+        }, { passive: true });
+        el.addEventListener('touchcancel', () => {
+            el.classList.remove('touch-active', 'touched');
+        }, { passive: true });
+    });
+})();
 const canvas = $('#particleCanvas');
 const ctx = canvas ? canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false }) : null;
 let particles = [];
@@ -1871,7 +1941,7 @@ if (!isMobile) {
     }
 }
 function resizeCanvas() {
-    if (!canvas) return;
+    if (!canvas || !ctx) return;
     const dpr = isMobile ? 1 : (window.devicePixelRatio || 1); 
     canvas.width = Math.max(300, window.innerWidth * dpr);
     canvas.height = Math.max(300, window.innerHeight * dpr);
@@ -1941,7 +2011,7 @@ function initParticles() {
 }
 
 function drawTrails() {
-    if (isMobile || !canvas) return; 
+   if (isMobile || !canvas || !ctx) return;
     ctx.save();
     trails.forEach(t => {
         t.life -= 0.05;
@@ -1956,7 +2026,7 @@ function drawTrails() {
 }
 
 function animateParticles() {
-    if (!canvas) return;
+    if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach((p, idx) => {
@@ -2427,7 +2497,17 @@ function initEnterOverlay() {
         link.appendChild(img);
         link.appendChild(document.createTextNode(contact.name));
         contactLinksDiv.appendChild(link);
-    });
+    if ('ontouchstart' in window) {
+        link.addEventListener('touchend', () => {
+            link.classList.add('touched');
+            setTimeout(() => {
+                link.classList.remove('touched');
+            }, 400);
+        }, { passive: true });
+    }
+    
+    contactLinksDiv.appendChild(link);
+});
 })();
 
 async function loadGitHubRepos() {
@@ -2482,9 +2562,18 @@ async function loadGitHubRepos() {
                     </div>
                 </div>
             `;
-            project.addEventListener('click', () => {
+        project.addEventListener('click', (e) => {
+            if ('ontouchstart' in window) {
+                e.preventDefault();
+                project.classList.add('touched');
+                setTimeout(() => {
+                    project.classList.remove('touched');
+                    window.open(repo.html_url, '_blank', 'noopener,noreferrer');
+                }, 200);
+            } else {
                 window.open(repo.html_url, '_blank', 'noopener,noreferrer');
-            });
+            }
+        });
             
             projectsGrid.appendChild(project);
             setTimeout(() => {
