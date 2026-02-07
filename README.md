@@ -1,12 +1,15 @@
 ## Features
 
-- **Particle System** - Interactive particles with connection lines
-- **Discord Integration** - Live presence display via Lanyard API
-- **GitHub Showcase** - Automatically fetches and displays your latest repositories
-- **Music Player** - audio player with volume control
-- **Frosted Glass effects** - Modern design with backdrop blur effects
-- **Responsive Design** - Optimized for both desktop and mobile devices
-- **Custom Animations** - Smooth transitions, hover effects, and scroll animations
+- **Dynamic Hover Effects** - Mouse-tracking radial gradient that follows cursor movement across interactive elements
+- **Particle System** - Interactive particles with connection lines and trailing effects
+- **Discord Integration** - Live presence display via Lanyard API showing current activity and status
+- **GitHub Showcase** - Automatically fetches and displays latest repositories with stars, forks, and metadata
+- **Music Player** - Integrated audio player with vertical volume control and album artwork
+- **Donation Section** - Cryptocurrency wallet addresses with smooth copy-to-clipboard functionality
+- **Frosted Glass Effects** - Modern glassmorphism design with backdrop blur effects
+- **Responsive Design** - Optimized for both desktop and mobile devices with adaptive layouts
+- **Custom Animations** - Smooth transitions, hover effects, scroll animations, and glitch effects
+- **Background Video** - Looping video background with fallback image support
 
 ## Live Demo
 
@@ -18,17 +21,18 @@ Visit: [https://tav5c.github.io](https://tav5c.github.io)
 2. Edit the following in `index.html`:
 
 ### Personal Information
+
 ```javascript
-// Line ~1886 - GitHub username
+//  - GitHub username
 const username = 'your-github-username';
 
-// Line ~1970 - Discord user ID (for Lanyard API)
+// - Discord user ID (for Lanyard API)
 const res = await fetch('https://api.lanyard.rest/v1/users/YOUR_DISCORD_ID');
 
-// Line ~1988 - Discord avatar ID
+// - Discord avatar ID
 const avatarUrl = `https://cdn.discordapp.com/avatars/YOUR_DISCORD_ID/${avatarHash}.${extension}`;
 
-// Line ~1858 - Contact links
+// - Contact links
 const contacts = [
     { name: 'DISCORD', icon: '...', url: 'your-discord-link' },
     { name: 'STEAM', icon: '...', url: 'your-steam-link' },
@@ -38,80 +42,229 @@ const contacts = [
 ```
 
 ### Media Files
-Replace these URLs with your own:
+
+Replace these with your own assets:
+
 ```html
-<!-- Line ~1470-1471 - Background video -->
-<source src="your-video-url.mp4" type="video/mp4">
+<!-- Background video -->
+<source src="assets/bg.mp4" type="video/mp4">
+<source src="assets/bg.webm" type="video/webm">
 
-<!-- Line ~1473 - Fallback background image -->
-<img class="bg-fallback" id="bgImage" src="your-image-url.png">
+<!-- Background music -->
+globalAudio = new Audio('assets/audio.mp3');
 
-<!-- Line ~1772 - Background music -->
-globalAudio = new Audio('your-music-url.mp3');
-
-<!-- Line ~1782-1783 - Cover and audio name (title) -->
-songNameEl.textContent = 'Your Song Name';
-albumCover.src = 'your-album-cover-url';
+<!-- Music metadata -->
+songNameEl.textContent = "Your Song Name - Artist (version)";
+const songCoverUrl = 'your-album-cover-url';
+const songPageUrl = 'your-song-link-url';
+const songPageLabel = 'Spotify'; // or 'YouTube', 'SoundCloud', etc.
 ```
 
-### Custom Font (Optional)
+### Custom Font
+
 ```css
-/* Line ~44 - Font */
+/* - Font face */
 @font-face {
     font-family: 'Chomsky';
-    src: url('your-font-url.otf') format('opentype');
+    src: url('assets/font.otf') format('opentype');
 }
 ```
 
-3. Deploy to GitHub Pages or any static hosting
+3. Place your assets in the `assets/` folder:
+   - `bg.mp4` - Background video
+   - `font.otf` - Custom font file
+   - `audio.mp3` - Background music
+
+4. Deploy to GitHub Pages or any static hosting service
 
 ## Customization
 
 ### Color Scheme
-Edit CSS variables at the top of the `<style>` section (Line ~20):
+
+Edit CSS variables at the top of the `<style>` section:
+
 ```css
 :root {
     --primary-red: #DC143C;
     --dark-red: #8B0000;
     --light-red: #FF1744;
-    /* ... other colors */
+    --text-shadow-red: rgba(220, 20, 60, 0.5);
+    --bg-dark: #000;
+    --text-light: #fff;
+    --text-gray: #aaa;
+    --bg-overlay: rgba(15, 10, 15, 0.185);
+    --border-red: rgba(220, 20, 60, 0.4);
+    --shadow-red: rgba(220, 20, 60, 0.4);
 }
 ```
 
 ### Particle Count
-Adjust in the `initParticles()` function (Line ~1559):
+
+Adjust in the `initParticles()` function:
+
 ```javascript
-const count = isMobile ? 7 : 80; // Mobile : Desktop
+const count = isMobile ? 5 : 40; // Mobile : Desktop
 ```
 
-## File Hosting
+### Dynamic Hover Effect
 
-This portfolio uses these hosting for media files. :
+Control the radial gradient intensity:
+
+```css
+.dynamic-hover::before {
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+        rgba(220, 20, 60, 0.15) 0%,  /* Adjust opacity here */
+        transparent 70%                /* Adjust spread here */
+    );
+}
+```
+
+### Donation Button Colors
+
+Customize crypto-specific hover colors:
+
+```css
+/* Bitcoin - Orange */
+.wallet-option:nth-child(1):hover {
+    border-color: #F7931A !important;
+}
+
+/* Ethereum - Blue */
+.wallet-option:nth-child(2):hover {
+    border-color: #627EEA !important;
+}
+
+/* Litecoin - Silver Blue */
+.wallet-option:nth-child(3):hover {
+    border-color: #345D9D !important;
+}
+
+/* Monero - Orange */
+.wallet-option:nth-child(4):hover {
+    border-color: #FF6600 !important;
+}
+```
+
+## File Structure
+
+```
+portfolio/
+├── index.html          # Main HTML file with embedded CSS and JavaScript
+├── assets/
+│   ├── bg.mp4         # Background video
+│   ├── font.otf       # Custom font
+│   └── audio.mp3      # Background music
+└── README.md          # This file
+```
+
+## File Hosting Options
+
+This portfolio uses external hosting for media files:
 
 - **GitHub Releases** - Free, reliable for project assets
 - **catbox.moe** - Quick file hosting, no account needed
-  
+- **Cloudinary** - CDN with optimization features
+- **Self-hosted** - Local assets folder for complete control
+
 ## Browser Support
 
-- Chromium based (like edge, brave, chrome)
+- Chrome, Edge, Brave (Chromium-based browsers)
 - Firefox
 - Safari
-- Mobile browsers 
+- Mobile browsers (iOS Safari, Chrome Mobile)
 
 **Note:** Requires JavaScript enabled for full functionality
 
-## Performance Notes
-
-- Reduced particle count on mobile devices
+## Performance Optimizations
 - Passive event listeners for smooth scrolling
-- RequestAnimationFrame for optimized animations
+- Throttled scroll events for better performance
+- Conditional rendering based on device capabilities
 - Lazy loading for resources
+- GPU-accelerated transforms and animations
+
+## Interactive Features
+### Dynamic Hover System
+
+Elements with the `dynamic-hover` class track mouse position and display a radial gradient that follows the cursor:
+
+- Music player
+- Time display
+- Discord activity card
+- Project cards
+- Audio volume slider
+- Donation buttons
+
+### Donation Section
+
+- Click to copy wallet addresses
+- Smooth state transitions from idle to copied
+- Vibrate effect on click
+- Heart particle animations on hover
+- Color-coded borders matching each cryptocurrency
+- Auto-reset after 2 seconds
+
+### Music Player
+
+- Play/pause controls
+- Vertical volume slider
+- Album artwork with hover popup
+- Link to song on streaming platform
+- Animated music note particles
+- Mobile-friendly controls
 
 ## APIs Used
 
-- **GitHub API** - Repository data
-- **Lanyard API** - Discord presence
-- **Simple Icons CDN** - Social media icons
+- **GitHub API** - Repository data and statistics
+- **Lanyard API** - Real-time Discord presence
+- **Simple Icons CDN** - Social media and cryptocurrency icons
+
+## Animation Details
+
+### Glitch Effect
+Triggered on donation button clicks for visual feedback
+
+### Heart Particles
+Float upward on hover over donation elements
+
+### Flame Border
+Animated border glow on interactive elements
+
+### Scroll Parallax
+Background grid and shapes move at different speeds
+
+### Fade-in Animations
+Project cards and sections appear on scroll into view
+
+## Known Limitations
+
+- Particle system disabled on mobile for performance
+- Background video may not autoplay on some iOS devices
+- Custom cursor hidden on touch devices
+- Some animations reduced on mobile browsers
+- Clipboard API requires HTTPS for deployment
+
+## Troubleshooting
+
+### Video not playing
+- Check video format compatibility (MP4 H.264 recommended)
+- Ensure video file is accessible
+- Some browsers block autoplay with sound (use muted attribute)
+
+### Music not playing
+- User interaction required before audio can play (browser security)
+- Check audio file format (MP3 recommended)
+- Verify file path is correct
+
+### Discord status not showing
+- Verify Discord user ID is correct
+- Ensure Lanyard bot is in a server with your Discord account
+- Check browser console for API errors
+
+### Particles not visible
+- Check if running on mobile (disabled by default)
+- Verify canvas element exists
+- Check browser console for JavaScript errors
 
 ## License
 
@@ -122,7 +275,8 @@ Free to use for personal portfolios. Please don't copy directly - use it as insp
 - Font: Chomsky (custom)
 - Icons: [Simple Icons](https://simpleicons.org/)
 - Discord Integration: [Lanyard](https://github.com/Phineas/lanyard)
+- Design Inspiration: Modern glassmorphism and brutalist aesthetics
 
 ---
 
-**Note:** Remember to replace all placeholder URLs and IDs with your own information before deploying.
+**Note:** Remember to replace all placeholder URLs, IDs, and wallet addresses with your own information before deploying.
