@@ -1802,21 +1802,8 @@ h1:hover {
         const $ = sel => document.querySelector(sel);
         const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-const DOM_CACHE = {
-    cursor: $('.cursor'),
-    follower: $('.cursor-follower'),
-    bgGrid: $('.bg-grid'),
-    shapes: $$('.shape'),
-    canvas: $('#particleCanvas'),
-    bgVideo: $('#bgVideo'),
-    projectsGrid: $('#projectsGrid'),
-    musicPlayer: $('#musicPlayer')
-};
-function updateCursor(x, y) {
-    if (DOM_CACHE.cursor) {
-        DOM_CACHE.cursor.style.transform = `translate(${x - 10}px, ${y - 10}px)`;
-    }
-}
+
+
 const canvas = $('#particleCanvas');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false });
 let particles = [];
@@ -1859,29 +1846,7 @@ window.addEventListener('resize', () => {
         }
     }, 150);
 }, { passive: true });
-function initMagneticElements() {
-    const magnets = $$('.contact-link, .project, .mini-btn');
-    
-    magnets.forEach(magnet => {
-        magnet.addEventListener('mousemove', (e) => {
-            const rect = magnet.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            const moveX = x * 0.15;
-            const moveY = y * 0.15;
-            
-            magnet.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            magnet.style.transition = 'transform 0.2s ease-out';
-        });
-        
-        magnet.addEventListener('mouseleave', () => {
-            magnet.style.transform = 'translate(0, 0)';
-            magnet.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        });
-    });
-}
-initMagneticElements();
+
 function initParticles() {
     if (!canvas || isMobile) return;
     particles = [];
@@ -2268,40 +2233,7 @@ function loadMusic() {
             verticalVol.value = v;
         });
     }
-if (isMobile) {
-    let touchStartTime;
-    let touchStartPos;
-    
-    document.addEventListener('touchstart', (e) => {
-        touchStartTime = Date.now();
-        touchStartPos = {
-            x: e.touches[0].clientX,
-            y: e.touches[0].clientY
-        };
-    }, { passive: true });
-    
-    document.addEventListener('touchend', (e) => {
-        const touchEndTime = Date.now();
-        const touchDuration = touchEndTime - touchStartTime;
-        
-        const touchEndPos = {
-            x: e.changedTouches[0].clientX,
-            y: e.changedTouches[0].clientY
-        };
-        
-        const distance = Math.sqrt(
-            Math.pow(touchEndPos.x - touchStartPos.x, 2) +
-            Math.pow(touchEndPos.y - touchStartPos.y, 2)
-        );
-        
-        if (touchDuration < 200 && distance < 10) {
-            const target = document.elementFromPoint(touchEndPos.x, touchEndPos.y);
-            if (target?.classList.contains('project')) {
-                target.click();
-            }
-        }
-    }, { passive: true });
-}
+
     globalAudio.addEventListener('play', () => {
         if (mobPlay) mobPlay.textContent = '❚❚';
         miniPlay.textContent = '❚❚';
@@ -2338,4 +2270,69 @@ function initEnterOverlay() {
         if (globalAudio) {
             try {
                 globalAudio.currentTime = 0;
-      
+            } catch (e) {
+                // ignore if seeking fails
+            }
+            globalAudio.play().catch(() => {});
+        }
+        if (bgVideo) {
+            try {
+                bgVideo.currentTime = 0;
+            } catch (e) {
+                // seeking might fail on some browsers; ignore
+            }
+            bgVideo.play().catch(() => {});
+        }
+    });
+}
+        loadMusic();
+
+
+(function renderContacts() {
+    const contactLinksDiv = $('#contactLinks');
+    if (!contactLinksDiv) return;
+
+    const contacts = [
+        { name: 'DISCORD', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/discord.svg', url: 'https://discord.com/users/772499734207660042' },
+        { name: 'STEAM', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/steam.svg', url: 'https://steamcommunity.com/id/tav5c/' },
+        { name: 'INSTAGRAM', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/instagram.svg', url: 'https://instagram.com/tav5c' },
+        { name: 'GITHUB', icon: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg', url: 'https://github.com/tav5c' }
+    ];
+
+    contacts.forEach(contact => {
+        const link = document.createElement('a');
+        link.href = contact.url;
+        link.className = 'contact-link';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', `Contact via ${contact.name}`);
+
+        const img = document.createElement('img');
+        img.src = contact.icon;
+        img.alt = `${contact.name} icon`;
+        img.className = 'contact-icon';
+        img.loading = 'lazy';
+
+        link.appendChild(img);
+        link.appendChild(document.createTextNode(contact.name));
+        contactLinksDiv.appendChild(link);
+    });
+})();
+
+async function loadGitHubRepos() {
+    const username = 'tav5c';
+    const projectsGrid = $('#projectsGrid');
+    
+    if (!projectsGrid) return;
+
+    try {
+        const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=8`);
+        
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const repos = await response.json();
+        
+        const publicRepos = repos.filter(repo => !repo.fork && !repo.private);
+        
+        if (publicRepos.length === 0) {
+            projectsGr
