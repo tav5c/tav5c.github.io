@@ -31,42 +31,16 @@
     --transition-ease: all 0.3s ease;
     --animation-duration: 2s;
 }
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    
-    @media (pointer: fine) and (hover: hover) {
-        body * {
-            cursor: none !important;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: none !important;
         }
-    }
-
-    
-    p, h1, h2, h3, .project-content, .activity-details, .time-value, .song-name, .contact-link {
-        -webkit-user-select: text;
-        -moz-user-select: text;
-        user-select: text;
-    }
-
-    
-    button, .cursor, .cursor-follower, .grain, img, .music-icon, .shape {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-    }
-a:focus-visible,
-button:focus-visible,
-.project:focus-visible,
-.contact-link:focus-visible {
-    outline: 3px solid var(--primary-red) !important;
-    outline-offset: 5px;
-    border-radius: 8px;
-    z-index: 100;
-    position: relative;
-}
 @font-face {
     font-family: 'Chomsky';
     src: url('assets/font.otf') format('opentype');
@@ -296,12 +270,7 @@ body {
             z-index: 9999;
             transition: transform 0.2s ease;
         }
-        .cursor.active {
-            width: 30px;
-            height: 30px;
-            border-color: #FF1744;
-            box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
-        }
+
         .cursor-follower {
             position: fixed;
             width: 40px;
@@ -1147,9 +1116,7 @@ h1:hover {
     overflow: hidden;
     opacity: 0;
     transform: scale(0.9);
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-style: preserve-3d;
-    will-change: transform;
+    transition: all 0.6s ease;
     cursor: pointer;
     box-shadow: 
         0 25px 70px rgba(0, 0, 0, 0.6),
@@ -1180,15 +1147,11 @@ h1:hover {
 .project:hover {
     border-color: rgba(220, 20, 60, 0.5);
     box-shadow: 
-        0 35px 90px rgba(220, 20, 60, 0.2),
+        0 28px 80px rgba(220, 20, 60, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transform: scale(1.05);
+    transform: scale(1.02);
     backdrop-filter: blur(16px) saturate(150%) brightness(1.0);
     -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(1.1);
-}
-
-.project:active {
-    transform: scale(0.98);
 }
 
 .project-content {
@@ -1301,13 +1264,7 @@ h1:hover {
     letter-spacing: 12px;
     opacity: 1;
 }
-.project.touching {
-    transform: scale(0.95);
-    border-color: rgba(220, 20, 60, 0.7);
-    box-shadow: 
-        0 15px 40px rgba(220, 20, 60, 0.4),
-        inset 0 0 20px rgba(220, 20, 60, 0.2);
-}
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1701,7 +1658,7 @@ h1:hover {
     transform: none !important;
     font-size: clamp(2rem, 8vw, 3rem) !important;
     letter-spacing: 10px !important;
-}
+    }
     .time-display {
         width: 92vw;
         padding: 0.6rem 1rem;
@@ -1795,8 +1752,8 @@ h1:hover {
     </div>
 
 <div class="audio-slider-vertical">
-    <button class="mini-btn" id="miniPlay" aria-label="Play/Pause Music">▶</button>
-    <input type="range" class="vertical-volume" id="verticalVolume" min="0" max="300" value="100" aria-label="Volume control">
+    <button class="mini-btn" id="miniPlay" aria-label="Play">▶</button>
+    <input type="range" class="vertical-volume" id="verticalVolume" min="0" max="300" value="100" orient="vertical">
 </div>
 <div class="mobile-audio" style="display:none;">
     <button id="mobilePlay" aria-label="Play">▶</button>
@@ -1811,7 +1768,7 @@ h1:hover {
 <div class="music-player" id="musicPlayer" style="display:none;">
     <div class="song-row">
 <div class="icon-wrap">
-    <span class="music-icon" id="musicIcon" role="button" tabindex="0" aria-label="Show album cover">♫</span>
+    <span class="music-icon" id="musicIcon">♫</span>
     <div class="music-particles" id="musicParticles"></div>
     <div class="cover-popup" id="coverPopup">
         <img class="album-cover" id="albumCover" alt="Album Cover">
@@ -1828,7 +1785,7 @@ h1:hover {
         <div id="discordActivity"></div>
         <h1>Tav</h1>
         <p class="subtitle">Lost ?</p>
-        <div class="scroll-indicator" role="button" tabindex="0" aria-label="Scroll to projects">１３３７</div>
+        <div class="scroll-indicator">１３３７</div>
     </section>
 <section class="content-section" id="projectsSection">
     <h2 class="section-title">PROJECTS</h2>
@@ -1844,27 +1801,30 @@ h1:hover {
     <script>
         const $ = sel => document.querySelector(sel);
         const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+const DOM_CACHE = {
+    cursor: $('.cursor'),
+    follower: $('.cursor-follower'),
+    bgGrid: $('.bg-grid'),
+    shapes: $$('.shape'),
+    canvas: $('#particleCanvas'),
+    bgVideo: $('#bgVideo'),
+    projectsGrid: $('#projectsGrid'),
+    musicPlayer: $('#musicPlayer')
+};
+function updateCursor(x, y) {
+    if (DOM_CACHE.cursor) {
+        DOM_CACHE.cursor.style.transform = `translate(${x - 10}px, ${y - 10}px)`;
+    }
+}
 const canvas = $('#particleCanvas');
 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true, willReadFrequently: false });
 let particles = [];
 let trails = [];
 let rafId = null;
 let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-const CONFIG = {
-    isMobile: (() => {
-        if (window.innerWidth < 768) return true;
-        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            return window.innerWidth < 1024;
-        }
-        return false;
-    })(),
-    particleCount: window.innerWidth < 768 ? 0 : Math.min(60, Math.floor(window.innerWidth / 25)),
-    githubUsername: 'tav5c',
-    discordUserId: '772499734207660042'
-};
-
-const isMobile = CONFIG.isMobile;if (!isMobile) {
+const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+if (!isMobile) {
     const projectsObserver = new IntersectionObserver(entries => {
         entries.forEach(ent => {
             if (ent.isIntersecting) ent.target.classList.add('visible');
@@ -1877,80 +1837,6 @@ const isMobile = CONFIG.isMobile;if (!isMobile) {
         projectsObserver.observe($('#projectsSection .section-title'));
     }
 }
-
-function initKeyboardNav() {
-    
-    $$('.project').forEach(project => {
-        project.setAttribute('tabindex', '0');
-        project.setAttribute('role', 'button');
-        project.setAttribute('aria-label', 'View project on GitHub');
-        
-        project.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                project.click();
-            }
-        });
-    });
-    
-    
-    const scrollIndicator = $('.scroll-indicator');
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                const projectsSection = $('#projectsSection');
-                if (projectsSection) {
-                    projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
-        
-        scrollIndicator.addEventListener('click', () => {
-            const projectsSection = $('#projectsSection');
-            if (projectsSection) {
-                projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    }
-    
-    
-    const musicIcon = $('#musicIcon');
-    if (musicIcon) {
-        musicIcon.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                musicIcon.click();
-            }
-        });
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    initKeyboardNav();
-});
-function initTouchFeedback() {
-    const touchElements = $$('.project, .contact-link, button, .music-icon');
-    
-    touchElements.forEach(el => {
-        el.addEventListener('touchstart', () => {
-            el.classList.add('touching');
-        }, { passive: true });
-        
-        el.addEventListener('touchend', () => {
-            setTimeout(() => {
-                el.classList.remove('touching');
-            }, 150);
-        }, { passive: true });
-        
-        el.addEventListener('touchcancel', () => {
-            el.classList.remove('touching');
-        }, { passive: true });
-    });
-}
-
-initTouchFeedback();
 function resizeCanvas() {
     if (!canvas) return;
     const dpr = isMobile ? 1 : (window.devicePixelRatio || 1); 
@@ -1973,15 +1859,33 @@ window.addEventListener('resize', () => {
         }
     }, 150);
 }, { passive: true });
-
+function initMagneticElements() {
+    const magnets = $$('.contact-link, .project, .mini-btn');
+    
+    magnets.forEach(magnet => {
+        magnet.addEventListener('mousemove', (e) => {
+            const rect = magnet.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const moveX = x * 0.15;
+            const moveY = y * 0.15;
+            
+            magnet.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            magnet.style.transition = 'transform 0.2s ease-out';
+        });
+        
+        magnet.addEventListener('mouseleave', () => {
+            magnet.style.transform = 'translate(0, 0)';
+            magnet.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+    });
+}
+initMagneticElements();
 function initParticles() {
-    if (!canvas || CONFIG.isMobile) return;
-    if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-    }
+    if (!canvas || isMobile) return;
     particles = [];
-    const count = CONFIG.particleCount;
+    const count = isMobile ? 7 : 80; 
     for (let i = 0; i < count; i++) {
         particles.push({
             x: Math.random() * innerWidth,
@@ -1997,44 +1901,7 @@ function initParticles() {
         });
     }
 }
-function initMagnetic() {
-    if (CONFIG.isMobile) return;
-    
-    const magneticElements = $$('.contact-link, .mini-btn, .music-icon');
-    
-    magneticElements.forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            const moveX = x * 0.2;
-            const moveY = y * 0.2;
-            
-            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = 'translate(0, 0)';
-        });
-    });
-}
 
-initMagnetic();
-if (canvas && !CONFIG.isMobile) {
-    const canvasObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting && rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-            } else if (entry.isIntersecting && !rafId) {
-                animateParticles();
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    canvasObserver.observe(canvas);
-}
 function drawTrails() {
     if (isMobile || !canvas) return; 
     ctx.save();
@@ -2296,7 +2163,7 @@ function loadMusic() {
         p.style.fontSize = `${11 + Math.random() * 9}px`;
         p.style.left = `${20 + Math.random() * 24}px`;
         p.style.bottom = '0px';
-        const dx = (Math.random() * -45 - 10).toFixed(1); 
+        const dx = (Math.random() * -45 - 10).toFixed(1); // negative for left drift
         p.style.setProperty('--dx', `${dx}px`);
         musicParticles.appendChild(p);
         setTimeout(() => p.remove(), 1200);
@@ -2345,4 +2212,130 @@ function loadMusic() {
         musicPlayer.style.position = 'relative';
     }
 
-    if (musicIcon
+    if (musicIcon) {
+        musicIcon.addEventListener('click', () => {
+            if (coverOpen) {
+                closeCover();
+            } else {
+                openCover();
+            }
+        });
+
+        musicIcon.addEventListener('mouseenter', () => {
+            if (hoverTimer) clearTimeout(hoverTimer);
+            hoverTimer = setTimeout(() => {
+                openCover();
+            }, 3000);
+        });
+
+        musicIcon.addEventListener('mouseleave', () => {
+            if (hoverTimer) {
+                clearTimeout(hoverTimer);
+                hoverTimer = null;
+            }
+        });
+    }
+
+    if (coverPopup) {
+        coverPopup.addEventListener('mouseleave', () => {
+            closeCover();
+        });
+    }
+
+    const mob = document.querySelector('.mobile-audio');
+    const mobPlay = document.getElementById('mobilePlay');
+    const mobVol = document.getElementById('mobileVolume');
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+    if (isMobile && mob) {
+        mob.style.display = 'flex';
+        mobPlay.addEventListener('click', () => {
+            if (globalAudio.paused) {
+                globalAudio.play().catch(() => {});
+                if (bgVideoEl) {
+                    bgVideoEl.play().catch(() => {});
+                }
+            } else {
+                globalAudio.pause();
+                if (bgVideoEl) {
+                    bgVideoEl.pause();
+                }
+            }
+        });
+        mobVol.addEventListener('input', e => {
+            const v = e.target.value;
+            globalAudio.volume = v / 300;
+            verticalVol.value = v;
+        });
+    }
+if (isMobile) {
+    let touchStartTime;
+    let touchStartPos;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartTime = Date.now();
+        touchStartPos = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+    }, { passive: true });
+    
+    document.addEventListener('touchend', (e) => {
+        const touchEndTime = Date.now();
+        const touchDuration = touchEndTime - touchStartTime;
+        
+        const touchEndPos = {
+            x: e.changedTouches[0].clientX,
+            y: e.changedTouches[0].clientY
+        };
+        
+        const distance = Math.sqrt(
+            Math.pow(touchEndPos.x - touchStartPos.x, 2) +
+            Math.pow(touchEndPos.y - touchStartPos.y, 2)
+        );
+        
+        if (touchDuration < 200 && distance < 10) {
+            const target = document.elementFromPoint(touchEndPos.x, touchEndPos.y);
+            if (target?.classList.contains('project')) {
+                target.click();
+            }
+        }
+    }, { passive: true });
+}
+    globalAudio.addEventListener('play', () => {
+        if (mobPlay) mobPlay.textContent = '❚❚';
+        miniPlay.textContent = '❚❚';
+        startParticles();
+    });
+    globalAudio.addEventListener('pause', () => {
+        if (mobPlay) mobPlay.textContent = '▶';
+        miniPlay.textContent = '▶';
+        stopParticles();
+    });
+
+    globalAudio.addEventListener('canplaythrough', markAssetLoaded, { once: true });
+    globalAudio.addEventListener('error', () => {
+        if (bgVideoEl) {
+            audioFromVideo = true;
+            globalAudio = bgVideoEl;
+            bgVideoEl.muted = false;
+            bgVideoEl.loop = true;
+        }
+        markAssetLoaded();
+    });
+    globalAudio.load();
+}
+function initEnterOverlay() {
+    const enterOverlay = $('#enterOverlay');
+    const bgVideo = $('#bgVideo');
+    
+    if (!enterOverlay) return;
+    
+    enterOverlay.addEventListener('click', () => {
+        userInteracted = true;
+        enterOverlay.classList.add('hidden');
+        setTimeout(() => enterOverlay.style.display = 'none', 1500);
+        if (globalAudio) {
+            try {
+                globalAudio.currentTime = 0;
+      
