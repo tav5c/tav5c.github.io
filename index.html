@@ -6,8 +6,6 @@
 <meta property="og:title" content="TAV5C // VOID"/>
 <meta property="og:description" content="Digital rot from the void."/>
 <meta name="description" content="TAV5C — Architect of digital madness. Portfolio forged in the void."/>
-<meta property="og:image" content="https://tav5c.github.io/assets/og.png"/>
-<meta property="og:type" content="website"/>
 <meta property="og:url" content="https://tav5c.github.io"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="TAV5C // VOID"/>
@@ -110,7 +108,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* ── HERO ── */
 #hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 2rem;z-index:10;overflow:hidden;}
 .hero-eyebrow{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--crimson);border:1px solid rgba(255,0,51,.7);padding:.5rem 1.5rem;margin-bottom:2.2rem;position:relative;z-index:2;animation:neonSign 4s infinite;text-shadow:0 0 6px var(--crimson);}
-.hero-name {font-family: 'UnifrakturMaguntia', cursive;font-size: clamp(6rem, 20vw, 19rem);color: var(--char);line-height: .8; position: relative;animation: drift 8s ease-in-out infinite;text-shadow: 0 0 80px rgba(153,0,0,.3), 0 0 2px var(--crimson);user-select: none; letter-spacing: -4px; z-index: 2; cursor: none;-webkit-font-smoothing: antialiased;}
+.hero-name {font-family: 'UnifrakturMaguntia', cursive;font-size: clamp(6rem, 20vw, 19rem);color: var(--char);line-height: .8; position: relative;animation: drift 8s ease-in-out infinite;text-shadow: 0 0 80px rgba(153,0,0,.3), 0 0 2px var(--crimson);user-select: none; letter-spacing: -4px; z-index: 2; cursor: none;-webkit-font-smoothing: antialiased;contain: layout style;}
 .hero-name:hover{color:var(--dim);}
 .hero-name::before,.hero-name::after{content:attr(data-text);position:absolute;inset:0;font-family:inherit;font-size:inherit;letter-spacing:inherit;z-index:-1;will-change:transform;transform:translateZ(0);}
 .hero-name::before{animation:glitch1 3.5s infinite;color:#a30000;opacity:.6;}
@@ -126,7 +124,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .scroll-cue{position:absolute;bottom:8vh;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--crimson);animation:flickerAnim 3s infinite;z-index:2;}
 /* ── SECTIONS ── */
 .section{position:relative;z-index:10;max-width:940px;margin:0 auto;padding:5rem 2rem;}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,10rem);color:var(--char);-webkit-text-stroke:1px var(--crimson);line-height:.8;text-align:center;margin-top:-2.5rem;margin-bottom:2.5rem;animation:drift 9s ease-in-out infinite;user-select:none;opacity:0;transform:translateY(22px);text-shadow: 0 0 15px rgba(255,0,51,0.25);transition:opacity .8s,transform .8s,color .2s, text-shadow .2s;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,10rem);color:var(--char);-webkit-text-stroke:1px var(--crimson);line-height:.8;text-align:center;margin-top:-2.5rem;margin-bottom:2.5rem;animation:drift 9s ease-in-out infinite;user-select:none;opacity:0;transform:translateY(22px);text-shadow: 0 0 15px rgba(255,0,51,0.25);transition:opacity .8s,transform .8s,color .2s, text-shadow .2s;contain: layout style;}
 .section-title.vis{opacity:1;transform:translateY(0);}
 .section-title:hover{color:var(--crimson); text-shadow: 0 0 30px rgba(255,0,51,0.6);}
 .divider{width:100%;height:1px;position:relative;z-index:10;background:linear-gradient(to right,transparent,var(--blood),transparent);opacity:.45;}
@@ -171,7 +169,7 @@ body.locked { overflow: hidden !important; }
 @keyframes panicJitter { 0% { transform: translate(2px, 1px) rotate(0deg) scale(1.05); } 20% { transform: translate(-3px, 0px) rotate(2deg) scale(1.1); } 40% { transform: translate(1px, -1px) rotate(2deg) scale(1.05); } 60% { transform: translate(-3px, 1px) rotate(0deg) scale(1.1); } 80% { transform: translate(-1px, -1px) rotate(2deg) scale(1.05); } 100% { transform: translate(1px, -2px) rotate(-1deg) scale(1.1); } }
 /* ── TELEPORT PANIC MODE ── */
 body.panic-mode #web-canvas, body.panic-mode #ash-canvas {filter: invert(1) hue-rotate(90deg) contrast(200%);transform: scale(1.05);}
-body.panic-mode .hero-name, body.panic-mode .section-title, body.panic-mode .skill-word, body.panic-mode .contact-frame-btn {animation: glitch1 0.15s infinite, panicJitter 0.1s infinite !important;color: var(--crimson) !important;border-color: var(--crimson) !important;text-shadow: 0 0 15px var(--crimson) !important;}
+body.panic-mode .hero-name, body.panic-mode .section-title, body.panic-mode .contact-frame-btn {animation: glitch1 0.15s infinite, panicJitter 0.1s infinite !important;color: var(--crimson) !important;border-color: var(--crimson) !important;text-shadow: 0 0 15px var(--crimson) !important;}
 /* Force social icons to match the panic color */
 body.panic-mode .soc-icon { background: var(--crimson) !important; }
 body.panic-mode #sys-monitor, body.panic-mode #left-hud {animation: panicJitter 0.15s infinite !important;border-color: #ff0033 !important;}
@@ -730,6 +728,7 @@ window.addEventListener('DOMContentLoaded', () => {
    GLOBALS
 ═══════════════════════════════════════ */
 const isMobile = window.matchMedia('(max-width:768px)').matches || navigator.maxTouchPoints > 1;
+const LOW_END = isMobile || navigator.hardwareConcurrency < 4 || (navigator.deviceMemory !== undefined && navigator.deviceMemory < 4);
 let mx = window.innerWidth / 2, my = window.innerHeight / 2;
 let rx = mx, ry = my;
 let isMouseD = false;
@@ -862,7 +861,7 @@ function afterBoot(){
     const c  = document.getElementById('web-canvas');
     if(isMobile){c.style.display='none';return;}
     const cx = c.getContext('2d');
-    const nc = 40;
+    const nc = LOW_END ? 18 : 40;
     let W, H, nodes = [];
     function rz(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; nodes=Array.from({length:nc},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*1.6,vy:(Math.random()-.5)*1.6})); }
     rz(); 
@@ -876,7 +875,7 @@ function afterBoot(){
       function tick(){
         if(document.body.classList.contains('dead-mode')) return; 
         webFrame++;
-        if (webFrame % 2 !== 0) return;
+        if (webFrame % (LOW_END ? 4 : 2) !== 0) return;
         cx.clearRect(0,0,W,H);
         nodes.forEach(n=>{
         n.x+=n.vx; n.y+=n.vy;
@@ -907,7 +906,7 @@ function afterBoot(){
   (function(){
     const c  = document.getElementById('ash-canvas');
     const cx = c.getContext('2d');
-    const count = isMobile ? 60 : 220;
+    const count = isMobile ? 60 : LOW_END ? 100 : 220;
     let W, H;
     function rz(){
       W=c.width=window.innerWidth; H=c.height=window.innerHeight;
@@ -939,7 +938,7 @@ function afterBoot(){
     document.addEventListener('touchstart', e => spawnBurst(e.touches[0].clientX,e.touches[0].clientY,40), {passive:true});
     let lastAshTs=0;
     function tick(ts){
-      if(isMobile && ts-lastAshTs < 14) return;
+      if((isMobile || LOW_END) && ts-lastAshTs < (isMobile ? 14 : 32)) return;
       if(isMobile) lastAshTs=ts;
       cx.clearRect(0,0,W,H);
       const t=ts*.001;
@@ -1357,7 +1356,7 @@ function afterBoot(){
         x:Math.random()*W2,y:Math.random()*H2,
         vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2
       }));
-      function T1cks(){
+      let _wf=0; function T1cks(){_wf++;if(LOW_END&&_wf%3!==0){requestAnimationFrame(T1cks);return;}
         if(!document.body.classList.contains('dead-mode'))return;
         wx.clearRect(0,0,W2,H2);
         gNodes.forEach(n=>{
@@ -1377,7 +1376,7 @@ function afterBoot(){
           }
         }
         wx.globalAlpha=1;
-        requestAnimationFrame(T1cks);
+        requestAnimationFrame(LOW_END ? (ts=>{ if((ts|0)%2===0) T1cks(); else requestAnimationFrame(T1cks); }) : T1cks);
       }
       T1cks();
       // Swap ash particles to bone color
@@ -1808,7 +1807,7 @@ if(act){
   /* ── SCROLL REVEAL ── */
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.style.willChange='auto';e.target.classList.add('vis');io.unobserve(e.target);}});
-  },{threshold:.08,rootMargin:'0px 0px -15px 0px'});
+  },{threshold:.15,rootMargin:'0px 0px -50px 0px'});
   document.querySelectorAll('.stat,.about-body,.repo-card,.contact-scream,.section-title').forEach(el=>{el.style.willChange='opacity';io.observe(el);});
 
   /* ── WEIRDCORE BOXES ── */
