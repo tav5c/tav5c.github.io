@@ -156,6 +156,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .repo-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--crimson);opacity:0;transform:translateY(-1px);}
 .repo-card:hover::after{animation:crtSweep .55s ease-out forwards;}
 @keyframes crtSweep{0%{opacity:.9;transform:translateY(0);}100%{opacity:0;transform:translateY(100%);}}
+/* ── REPO CARD GLITCH ── */
+@keyframes repoNameGlitch{0%,100%{clip-path:inset(0 0 100% 0);transform:translate(0,0);}10%{clip-path:inset(20% 0 60% 0);transform:translate(-3px,0);}20%{clip-path:inset(50% 0 30% 0);transform:translate(3px,0);}30%{clip-path:inset(10% 0 80% 0);transform:translate(-2px,0);}40%{clip-path:inset(70% 0 10% 0);transform:translate(2px,0);}}
+@keyframes langFlicker{0%,100%{opacity:1;}15%{opacity:.05;}35%{opacity:.9;}55%{opacity:.1;}75%{opacity:1;}}
+.repo-card:hover .repo-name{position:relative;}
+.repo-card:hover .repo-name::before{content:attr(data-text);position:absolute;inset:0;color:var(--crimson);animation:repoNameGlitch .4s steps(1) infinite;pointer-events:none;padding-right:3.5rem;}
+.repo-card:hover .repo-name::after{content:attr(data-text);position:absolute;inset:0;color:var(--bone);left:2px;opacity:.5;animation:repoNameGlitch .4s steps(1) .07s infinite reverse;pointer-events:none;padding-right:3.5rem;}
+.repo-card:hover .repo-lang{animation:langFlicker .6s infinite;}
+/* ── SKILLS MUTATION ── */
+@keyframes skillDie{0%{transform:var(--sk-base-t) scale(1);opacity:var(--sk-op);}30%{transform:var(--sk-base-t) scale(1.4) skewX(-15deg);opacity:1;filter:blur(0);}60%{transform:var(--sk-base-t) scaleX(0.05) scaleY(2.2);opacity:.8;filter:blur(1px);}100%{transform:var(--sk-base-t) scale(0) rotate(180deg);opacity:0;}}
+@keyframes skillRespawn{0%{transform:var(--sk-base-t) scale(0) rotate(-180deg);opacity:0;filter:blur(4px);}60%{transform:var(--sk-base-t) scale(1.15) skewX(5deg);opacity:.9;filter:blur(0);}100%{transform:var(--sk-base-t) scale(1);opacity:var(--sk-op);}}
+.skill-word.dying{animation:skillDie .5s cubic-bezier(.4,0,1,1) forwards!important;color:var(--crimson)!important;text-shadow:0 0 20px var(--crimson)!important;pointer-events:none;}
+.skill-word.respawning{animation:skillRespawn .6s cubic-bezier(0,.8,.2,1) forwards!important;pointer-events:none;}
 /* ── SKILLS ── */
 .skills-chaos{position:relative;height:560px;width:100vw;margin-left:calc(-50vw + 50%);overflow:hidden;border-top:1px dashed var(--dim);border-bottom:1px dashed var(--dim);}
 .skill-word{position:absolute;font-family:'UnifrakturMaguntia',cursive;cursor:crosshair;user-select:none;transition:color .15s,transform .15s,text-shadow .15s;will-change:transform;}
@@ -323,6 +335,9 @@ body.dead-mode .stat:nth-child(4) { transform: rotate(1.5deg) translateX(5px) !i
 /* Moody Hover: Depressed and dim */
 body.dead-mode .stat:hover { transform: translateX(2px) scale(0.98) !important; background: rgba(15,0,0,0.8) !important; border-color: var(--blood) !important; }
 /* Degraded Repository Cards */
+body.dead-mode .repo-card:hover .repo-name::before,
+body.dead-mode .repo-card:hover .repo-name::after { animation: none !important; content: none !important; }
+body.dead-mode .repo-card:hover .repo-lang { animation: none !important; }
 body.dead-mode .repos-grid { gap: 1rem; }
 body.dead-mode .repo-card { transition: none !important; border-style: dashed; border-color: rgba(50,0,0,0.4) !important; background: rgba(0,0,0,0.4) !important; box-shadow: none !important; }
 body.dead-mode .repo-card:nth-child(1) { transform: skewX(-2deg) rotate(-1deg) !important; opacity: 0.7; }
@@ -1434,7 +1449,7 @@ function afterBoot(){
         }
       });
     const bars=document.querySelectorAll('.pill-bar'),volSl=document.getElementById('vol-sl');
-const aud=new Audio(CFG.audio); aud.loop=true; aud.volume=parseFloat(volSl.value);
+const aud=new Audio(CFG.audio); aud.loop=true; aud.volume=parseFloat(volSl.value); window._aud=aud;
     let playing=false;
 
     // We only remember if they had the music turned ON
@@ -1753,7 +1768,7 @@ if(act){
       repos.forEach((r,idx)=>{
         const a = skels[idx] || document.createElement('a');
         a.className='repo-card'; a.href=r.html_url; a.target='_blank'; a.rel='noopener';
-        a.innerHTML=`<div class="repo-name">${r.name}</div><div class="repo-desc">${r.description||'// NO DESCRIPTION PROVIDED'}</div><div class="repo-lang">${r.language||'SYS'}</div>${r.archived ? '<div class="repo-archived">ARCHIVED</div>' : ''}`;
+        a.innerHTML=`<div class="repo-name" data-text="${r.name}">${r.name}</div><div class="repo-desc">${r.description||'// NO DESCRIPTION PROVIDED'}</div><div class="repo-lang">${r.language||'SYS'}</div>${r.archived ? '<div class="repo-archived">ARCHIVED</div>' : ''}`;
         if(!skels[idx]) grid.appendChild(a);
         setTimeout(()=>{ a.classList.add('vis'); io.observe(a); }, idx*80);
       });
@@ -1797,10 +1812,43 @@ if(act){
       while(att<60&&placed.some(p=>Math.abs(p.x-x)<11&&Math.abs(p.y-y)<9));
       placed.push({x,y});
       el.style.left=x+'%'; el.style.top=y+'%';
-      el.style.transform=`rotate(${(Math.random()-.5)*32}deg)`;
+      const baseRot=`rotate(${(Math.random()-.5)*32}deg)`;
+      el.style.transform=baseRot;
+      el.style.setProperty('--sk-base-t', baseRot);
+      el.style.setProperty('--sk-op', String(opBase));
       const dur=4+Math.random()*6;
       el.style.animation=`drift ${dur}s ${-Math.random()*dur}s ease-in-out infinite`;
       container.appendChild(el);
+    });
+
+    // Mutation hover — word dies, respawns as a random other skill
+    // Animation always runs to completion regardless of hover state
+    const allTexts = skills.map(s=>s.t);
+    container.addEventListener('mouseover', e=>{
+      const w = e.target.closest('.skill-word');
+      if(!w || w.classList.contains('dying') || w.classList.contains('respawning')) return;
+      if(document.body.classList.contains('dead-mode')) return;
+      const orig = w.textContent;
+      w.style.pointerEvents = 'none';
+      w.classList.add('dying');
+      setTimeout(()=>{
+        w.classList.remove('dying');
+        const others = allTexts.filter(t=>t!==orig);
+        w.textContent = others[Math.floor(Math.random()*others.length)];
+        w.classList.add('respawning');
+        setTimeout(()=>{
+          w.classList.remove('respawning');
+          w.style.transition = 'opacity .3s ease';
+          w.style.opacity = '0';
+          setTimeout(()=>{
+            w.textContent = orig;
+            const dur = 4+Math.random()*6;
+            w.style.animation = `drift ${dur}s ${-Math.random()*dur}s ease-in-out infinite`;
+            w.style.opacity = '';
+            setTimeout(()=>{ w.style.transition = ''; w.style.pointerEvents = ''; }, 320);
+          }, 300);
+        }, 600);
+      }, 500);
     });
   })();
 
@@ -2061,6 +2109,11 @@ const DRAWERS = [drawSkull, drawCDRW, drawGlitchFace, drawSigil, drawStaticNoise
       const box = document.getElementById('contact-noise-box');
       const lbl = box.querySelector('.cnoise-lbl');
 
+      // Cursor proximity tracking
+      let _noiseMouseX = -9999, _noiseMouseY = -9999;
+      document.addEventListener('mousemove', e=>{ _noiseMouseX=e.clientX; _noiseMouseY=e.clientY; }, {passive:true});
+      document.addEventListener('touchmove', e=>{ _noiseMouseX=e.touches[0].clientX; _noiseMouseY=e.touches[0].clientY; }, {passive:true});
+
       function sizeCanvas(){
         const nw = box.clientWidth||360, nh = box.clientHeight||420;
         if(cnv.width!==nw||cnv.height!==nh){ cnv.width=nw; cnv.height=nh; }
@@ -2074,6 +2127,27 @@ const DRAWERS = [drawSkull, drawCDRW, drawGlitchFace, drawSigil, drawStaticNoise
             }, {passive:true});
       DRAWERS[artIdx2](cnv.getContext('2d'), cnv.width, cnv.height);
       if(lbl) lbl.textContent = 'VOID // ARTIFACT // DISCOVERED';
+
+      // Proximity-driven redraw speed
+      let _artBaseMs = 4000, _artProxRaf = null;
+      function _proxCheck(){
+        const br = box.getBoundingClientRect();
+        const cx3 = br.left + br.width/2, cy3 = br.top + br.height/2;
+        const dist = Math.hypot(_noiseMouseX - cx3, _noiseMouseY - cy3);
+        const maxD = Math.hypot(window.innerWidth, window.innerHeight) * 0.5;
+        const prox = Math.max(0, 1 - dist / maxD); // 0=far, 1=center
+        // Glow intensity scales with proximity
+        box.style.boxShadow = prox > 0.15
+          ? `0 0 ${14 + prox*40}px rgba(255,0,51,${.15+prox*.45}),inset 0 0 ${10+prox*20}px rgba(255,0,51,${.04+prox*.2})`
+          : '';
+        // Scroll speed of label
+        if(lbl && !document.body.classList.contains('dead-mode')){
+          const labels = ['VOID // ARTIFACT // DISCOVERED','SIG::DETECTED','PROXIMITY::LOCK','ENTITY_NEAR','CH.00 // LIVE'];
+          if(prox > 0.6 && Math.random() < 0.015) lbl.textContent = labels[Math.floor(Math.random()*labels.length)];
+        }
+        _artProxRaf = requestAnimationFrame(_proxCheck);
+      }
+      _proxCheck();
 
       let artTimer = setInterval(()=>{
         if(document.body.classList.contains('dead-mode')) return;
@@ -2094,11 +2168,17 @@ const DRAWERS = [drawSkull, drawCDRW, drawGlitchFace, drawSigil, drawStaticNoise
           sizeCanvas();
           const ctx=noiseCtx;
           const w=cnv.width, h=cnv.height;
+          const br2=box.getBoundingClientRect();
+          const pdist=Math.hypot(_noiseMouseX-(br2.left+br2.width/2),_noiseMouseY-(br2.top+br2.height/2));
+          const prox2=Math.max(0,1-pdist/(Math.hypot(window.innerWidth,window.innerHeight)*.5));
+          const noiseDense=.83-prox2*.18;
+          const glitchLines=Math.floor(2+prox2*8+Math.random()*5);
+          const glitchOff=Math.floor((Math.random()-.5)*(22+prox2*60));
           ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h);
           const bw=5,bh=5;
           for(let y=0;y<h;y+=bh){
             for(let x=0;x<w;x+=bw){
-              if(Math.random()>.83){
+              if(Math.random()>noiseDense){
                 const lum=Math.floor(Math.random()*90);
                 ctx.fillStyle=`rgb(${lum},${Math.floor(lum*.25)},${Math.floor(lum*.25)})`;
                 ctx.fillRect(x,y,bw,bh);
@@ -2107,9 +2187,9 @@ const DRAWERS = [drawSkull, drawCDRW, drawGlitchFace, drawSigil, drawStaticNoise
               }
             }
           }
-          for(let i=0;i<2+Math.floor(Math.random()*5);i++){
-            const sy=Math.floor(Math.random()*h),sh=1+Math.floor(Math.random()*6),offset=Math.floor((Math.random()-.5)*22);
-            try{ctx.drawImage(cnv,0,sy,w,sh,offset,sy,w,sh);}catch(e){}
+          for(let i=0;i<glitchLines;i++){
+            const sy=Math.floor(Math.random()*h),sh=1+Math.floor(Math.random()*6);
+            try{ctx.drawImage(cnv,0,sy,w,sh,glitchOff,sy,w,sh);}catch(e){}
             ctx.fillStyle='rgba(255,0,51,.05)';ctx.fillRect(0,sy,w,sh);
           }
           ctx.fillStyle='rgba(255,0,0,.06)';ctx.fillRect(0,(frame2*1.2)%h,w,22);
@@ -2126,22 +2206,18 @@ const DRAWERS = [drawSkull, drawCDRW, drawGlitchFace, drawSigil, drawStaticNoise
 (function(){
   let cx2=window.innerWidth/2,cy2=window.innerHeight/2;
   let lastCx2=0, lastCy2=0;
-  
   document.addEventListener('mousemove',e=>{cx2=e.clientX;cy2=e.clientY;},{passive:true});
-  
-  function pt(){
+  _ticks.push(()=>{
     if (Math.abs(cx2 - lastCx2) > 0.5 || Math.abs(cy2 - lastCy2) > 0.5) {
       document.querySelectorAll('.wc-box').forEach(b=>{
         const r=b.getBoundingClientRect();
         const dx=(cx2-(r.left+r.width/2))/window.innerWidth;
         const dy=(cy2-(r.top+r.height/2))/window.innerHeight;
-        b.style.transform=`translate3d(${dx*22}px,${dy*22}px,0)`; 
+        b.style.transform=`translate3d(${dx*22}px,${dy*22}px,0)`;
       });
       lastCx2 = cx2; lastCy2 = cy2;
     }
-    requestAnimationFrame(pt);
-  }
-  pt();
+  });
 })();
   /* ── RANDOM GLITCH PULSE (separate from VHS) ── */
   const glitchOvr=document.getElementById('glitch-ovr');
