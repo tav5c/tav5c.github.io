@@ -202,9 +202,14 @@ body.panic-mode .marquee-wrap, body.panic-mode .terminal-tape {animation: panicJ
 #contact-noise-box .cnr.bl{bottom:0;left:0;border-bottom:1px solid var(--crimson);border-left:1px solid var(--crimson);}
 #contact-noise-box .cnr.br{bottom:0;right:0;border-bottom:1px solid var(--crimson);border-right:1px solid var(--crimson);}
 #contact-noise-box .cnoise-lbl{position:absolute;bottom:0;left:0;right:0;z-index:3;font-family:'Space Mono',monospace;font-size:.42rem;letter-spacing:.18em;color:rgba(255,0,51,.5);background:rgba(0,0,0,.75);padding:3px 8px;}
-.contact-scream{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,10rem);color:var(--char);-webkit-text-stroke:1px var(--crimson);line-height:.8;margin-bottom:2.5rem;animation:drift 9s ease-in-out infinite;opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s,color .2s;}
+.contact-scream{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,10rem);color:var(--char);-webkit-text-stroke:1px var(--crimson);line-height:.8;margin-bottom:2.5rem;letter-spacing:.12em;animation:drift 9s ease-in-out infinite, screamShake .18s infinite;opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s,color .2s;position:relative;}
 .contact-scream.vis{opacity:1;transform:translateY(0);}
 .contact-scream:hover{color:var(--crimson);}
+.contact-scream::before,.contact-scream::after{content:attr(data-text);position:absolute;inset:0;font-family:inherit;font-size:inherit;letter-spacing:inherit;line-height:inherit;-webkit-text-stroke:inherit;will-change:transform;}
+.contact-scream::before{animation:glitch1 3.2s infinite;color:#a30000;opacity:.55;}
+.contact-scream::after{animation:glitch2 2.5s infinite reverse;color:var(--dim);opacity:.6;}
+@keyframes screamShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-2px);}75%{transform:translateX(2px);}}
+@media(pointer:coarse){.contact-scream{animation:drift 9s ease-in-out infinite!important;letter-spacing:0!important;}.contact-scream::before,.contact-scream::after{display:none!important;}}
 .contact-links{display:grid;grid-template-columns:repeat(3, 1fr);gap:1.2rem;justify-content:center;width:100%;}
 .contact-frame-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:.8rem;background:transparent;padding:.75rem 1.2rem;border:1px solid var(--dim);color:var(--bone);font-family:'Space Mono',monospace;font-size:.7rem;text-decoration:none;transition:border-color .25s,color .25s,transform .25s,text-shadow .25s;letter-spacing:.07em;}
 .soc-icon{width:15px;height:15px;background:currentColor;flex-shrink:0;}
@@ -600,7 +605,7 @@ html.already-booted #boot-screen { display: none !important; }
       </div>
     </div>
     <div class="contact-right">
-    <div class="contact-scream">REACH<br>INTO<br>THE<br>DARK</div>
+    <div class="contact-scream" data-text="REACH INTO THE DARK">REACH<br>INTO<br>THE<br>DARK</div>
     <div class="contact-links">
       <a class="contact-frame-btn" href="https://discord.com/users/772499734207660042" target="_blank" rel="noopener">
         <span class="brc tl"></span><span class="brc tr"></span><span class="brc bl"></span><span class="brc br"></span>
